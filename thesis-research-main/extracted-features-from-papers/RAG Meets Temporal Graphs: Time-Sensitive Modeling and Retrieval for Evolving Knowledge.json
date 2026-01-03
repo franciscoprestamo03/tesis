@@ -1,0 +1,459 @@
+{
+    "meta": {
+        "title": "RAG Meets Temporal Graphs: Time-Sensitive Modeling and Retrieval for Evolving Knowledge",
+        "date": "October 2025",
+        "link": "https://arxiv.org/abs/2510.13590",
+        "paper_type": "Novel model/system",
+        "paper_type_explanation": "Proposes Temporal GraphRAG (TG-RAG), a new framework for time-aware RAG using bi-level temporal graphs with incremental update support."
+    },
+    "A_data_and_task": {
+        "domain_data_type": [
+            "enterprise/financial"
+        ],
+        "domain_data_type_explanation": "Focuses on earnings call transcripts from financial reports of public companies across sectors.",
+        "task_type": [
+            "temporal QA",
+            "domain QA over evolving corpora"
+        ],
+        "task_type_explanation": "Time-sensitive question answering including specific multi-hop fact-based queries and abstract trend/summarization queries over evolving financial corpora.",
+        "dataset_characteristics": {
+            "dataset_names": [
+                "ECT-QA"
+            ],
+            "dataset_size": {
+                "entities": "Not specified",
+                "relations": "Not specified",
+                "triples": "Not specified",
+                "documents": "480"
+            },
+            "temporal_span": "2020-2024",
+            "update_frequency": "quarterly"
+        },
+        "dataset_characteristics_explanation": "ECT-QA derived from 480 earnings call transcripts (1.58M tokens) from 24 companies; base corpus 2020-2023 (384 docs), new corpus 2024 (96 docs); 1,105 specific QA pairs + 100 abstract questions.",
+        "benchmark_metrics": [
+            "Correct",
+            "Refusal",
+            "Incorrect",
+            "ROUGE-L",
+            "F1"
+        ],
+        "benchmark_metrics_explanation": "LLM-judged factual accuracy (Correct/Refusal/Incorrect ratios) for specific QA; ROUGE-L/F1 for lexical overlap; multi-dimensional LLM judging (Comprehensiveness, Diversity, Temporal Coverage) for abstract QA."
+    },
+    "B_graph_kg_structure": {
+        "graph_kg_representation_type": [
+            "Temporal KG",
+            "Hierarchical/multi-level graph"
+        ],
+        "graph_kg_representation_type_explanation": "Bi-level temporal graph: lower layer temporal KG with timestamped relations (quadruples: entity-relation-entity-time); upper layer hierarchical time graph (year>quarter>month>day).",
+        "graph_evolution_type": [
+            "Updatable",
+            "Append-only",
+            "Versioned"
+        ],
+        "graph_evolution_type_explanation": "Supports incremental updates by merging new timestamped relations; preserves historical evolution as distinct parallel edges; maintains multi-granularity time reports via ancestor propagation.",
+        "node_types": [
+            "entities",
+            "time nodes",
+            "summary/rule nodes"
+        ],
+        "node_types_explanation": "Non-temporal entities in KG layer; time nodes (timestamps organized hierarchically); temporal summaries/reports per time node.",
+        "edge_types": [
+            "semantic KG relations",
+            "temporal relations",
+            "hierarchical edges"
+        ],
+        "edge_types_explanation": "Timestamped relation edges (v1-v2-relation-τ); cross-layer edges from time nodes to active relations; hierarchical edges in time graph (parent-child intervals).",
+        "graph_schema": {
+            "schema_type": "schema-free",
+            "schema_evolution_handling": "N/A"
+        },
+        "graph_schema_explanation": "No fixed ontology mentioned; relations extracted dynamically via LLM from text chunks.",
+        "graph_scale": "Medium (10K-1M nodes)",
+        "graph_scale_explanation": "Base corpus: 16,817 entities, 28,157 relations; updated: 20,110 entities, 34,671 relations."
+    },
+    "C_temporal_modeling_and_queries": {
+        "temporal_structure_type": [
+            "temporal KG",
+            "bi-level temporal graph",
+            "hierarchical"
+        ],
+        "temporal_structure_type_explanation": "Bi-level: temporal KG (timestamped edges) + hierarchical time graph; multi-granularity summaries per time node.",
+        "temporal_granularity": [
+            "hierarchical",
+            "multi-granularity"
+        ],
+        "temporal_granularity_explanation": "Hierarchical time buckets (year/quarter/month/day); recursive summary propagation from leaf to ancestors.",
+        "temporal_representation": [
+            "Point-based (discrete timestamps)",
+            "Interval-based (start/end times)",
+            "Relative temporal expressions"
+        ],
+        "temporal_representation_explanation": "Normalized timestamps (e.g., 2023-Q1); supports at/before/after/between via LLM extraction.",
+        "temporal_query_handling": [
+            "explicit temporal parsing"
+        ],
+        "temporal_query_handling_explanation": "LLM extracts explicit/implicit temporal expressions from query to identify relevant time nodes T_q.",
+        "temporal_conflict_redundancy_handling": [
+            "provenance tracking"
+        ],
+        "temporal_conflict_redundancy_handling_explanation": "Preserves identical relations at different times as distinct edges; no explicit conflict detection mentioned.",
+        "temporal_decay_obsolescence": {
+            "decay_function_type": [],
+            "obsolescence_detection": "N/A",
+            "historical_preservation": "Explicit edge versioning"
+        },
+        "temporal_decay_obsolescence_explanation": "No decay; historical facts preserved via timestamped parallel edges.",
+        "multi_hop_temporal_reasoning": {
+            "temporal_path_constraints": "Yes (via temporal filtering)",
+            "temporal_ordering_enforcement": "Yes (time hierarchy)",
+            "compositional_temporal_queries": "Yes (multi-time scopes)"
+        },
+        "multi_hop_temporal_reasoning_explanation": "PPR on temporally filtered subgraph; supports single/multi/relative-time multi-hop queries."
+    },
+    "D_dynamic_update_mechanisms": {
+        "update_trigger": [
+            "event-driven",
+            "on-demand"
+        ],
+        "update_trigger_explanation": "Triggered by new documents; extracts quadruples and merges into graph.",
+        "update_policy_control_logic": [
+            "incremental summarization"
+        ],
+        "update_policy_control_logic_explanation": "Generate reports only for new leaf time nodes and propagate to ancestors.",
+        "update_scope": [
+            "fact-level",
+            "node-level",
+            "summary-level"
+        ],
+        "update_scope_explanation": "New temporal quadruples merged; new time nodes added; summaries updated incrementally.",
+        "verification_pipeline": {
+            "verification_stages": [],
+            "verification_methods": [],
+            "confidence_scoring_approach": "N/A"
+        },
+        "verification_pipeline_explanation": "No explicit verification; relies on LLM extraction.",
+        "conflict_resolution_strategy": {
+            "before_update": [],
+            "after_update": [],
+            "versioning_approach": "Parallel timestamped edges",
+            "temporal_scoping": "Yes",
+            "provenance_based_resolution": "Chunk attribution"
+        },
+        "conflict_resolution_strategy_explanation": "Conflicts avoided by distinct edges for same relation at different times; provenance via original chunks.",
+        "incremental_construction": {
+            "entity_linking_method": "LLM extraction",
+            "deduplication_strategy": "N/A",
+            "fusion_approach": "N/A"
+        },
+        "incremental_construction_explanation": "LLM extracts entities/relations/timestamps from new chunks; merges into existing graph.",
+        "update_latency_throughput": {
+            "target_latency": "Not specified",
+            "update_throughput": "Low token cost (1.6M prompt/2.0M completion for 2024 corpus)",
+            "scalability_characteristics": "Efficient vs full reindexing"
+        },
+        "update_latency_throughput_explanation": "Incremental: 1.6M/2.0M tokens for new corpus vs GraphRAG's 30M/7.8M."
+    },
+    "E_retrieval_and_reasoning": {
+        "retrieval_unit_granularity": [
+            "triple",
+            "summary/rule node",
+            "temporal path",
+            "dynamic graph pattern/subgraph"
+        ],
+        "retrieval_unit_granularity_explanation": "Chunks, timestamped edges, time reports/summaries, temporally filtered subgraphs.",
+        "temporal_awareness_in_retrieval": [
+            "hard filters",
+            "time-decay weighting"
+        ],
+        "temporal_awareness_in_retrieval_explanation": "Temporal filtering 1[τ ∈ T_q]; PPR personalization on time-seed entities.",
+        "retrieval_strategy": [
+            "graph traversal",
+            "hybrid vector-graph",
+            "multi-hop path finding",
+            "coarse-to-fine"
+        ],
+        "retrieval_strategy_explanation": "Local: PPR on subgraph + chunk scoring; Global: time reports + atomic points; vector similarity for initial K edges.",
+        "retrieval_indexing": {
+            "index_structure": [
+                "hierarchical",
+                "temporal index"
+            ],
+            "index_update_strategy": "Incremental",
+            "query_optimization": [
+                "PPR"
+            ]
+        },
+        "retrieval_indexing_explanation": "Bi-level graph with precomputed entity/relation embeddings; hierarchical time index.",
+        "reasoning_generation_protocol": [
+            "path-based/graph-CoT"
+        ],
+        "reasoning_generation_protocol_explanation": "Local: LLM on retrieved chunks; Global: LLM extracts atomic points (desc/score/confidence) then synthesizes.",
+        "multi_hop_reasoning_support": {
+            "max_hop_depth": "Not specified",
+            "path_ranking_mechanism": "PPR",
+            "compositional_reasoning": "Subgraph PPR"
+        },
+        "multi_hop_reasoning_support_explanation": "PPR propagates relevance in query subgraph.",
+        "context_window_management": {
+            "large_graph_strategy": [
+                "summarization",
+                "filtering"
+            ],
+            "temporal_prioritization": "Time filtering",
+            "dynamic_context_selection": "Greedy pack by score"
+        },
+        "context_window_management_explanation": "Greedy pack top chunks/reports to L_ctx; iterative low-confidence point removal."
+    },
+    "F_llm_role_and_learning": {
+        "llm_role_in_system": [
+            "graph constructor",
+            "verifier",
+            "reasoner",
+            "memory manager"
+        ],
+        "llm_role_in_system_explanation": "Extracts temporal quadruples; generates multi-granularity reports; query time extraction; QA generation.",
+        "llm_adaptation_mode": [
+            "frozen base model",
+            "in-context learning"
+        ],
+        "llm_adaptation_mode_explanation": "Uses off-the-shelf LLMs (Gemini-2.5-flash-lite for indexing, GPT-4o-mini for QA).",
+        "llm_integration_pattern": {
+            "as_extractor": "Temporal quadruple extraction",
+            "as_reasoner": "Query time parsing, atomic point extraction",
+            "as_verifier": "N/A",
+            "as_learner": "N/A"
+        },
+        "llm_integration_pattern_explanation": "LLM for extraction (entities/relations/timestamps), summarization, and generation.",
+        "prompt_engineering": {
+            "prompting_strategy": [
+                "few-shot",
+                "chain-of-thought"
+            ],
+            "temporal_instruction_design": "Explicit temporal quadruple prompts",
+            "specialized_prompts": [
+                "time extraction",
+                "report generation",
+                "QA with refusal"
+            ]
+        },
+        "prompt_engineering_explanation": "Few-shot examples for temporal parsing; specialized prompts for local/global QA with temporal accuracy and refusal guidelines.",
+        "continual_learning_support": {
+            "catastrophic_forgetting_mitigation": "N/A",
+            "knowledge_retention_strategy": "N/A",
+            "incremental_learning_approach": "N/A"
+        },
+        "continual_learning_support_explanation": "No model learning; retrieval-based."
+    },
+    "G_evaluation_and_practical": {
+        "evaluation_focus": [
+            "temporal QA accuracy",
+            "dynamic update quality/stability",
+            "efficiency metrics"
+        ],
+        "evaluation_focus_explanation": "Incremental eval: base queries on base/updated corpus; new queries on updated; update token costs.",
+        "evaluation_metrics": {
+            "accuracy_metrics": [
+                "Correct",
+                "ROUGE-L",
+                "F1"
+            ],
+            "temporal_metrics": [
+                "Temporal Coverage"
+            ],
+            "update_quality_metrics": [
+                "performance stability post-update"
+            ],
+            "efficiency_metrics": [
+                "index token cost"
+            ],
+            "consistency_metrics": [
+                "base query perf drop"
+            ]
+        },
+        "evaluation_metrics_explanation": "TG-RAG: Correct 0.599 (base), 0.587/0.617 (updated base/new); low update cost.",
+        "baseline_comparisons": {
+            "systems_compared": [
+                "NaiveRAG",
+                "QD-RAG",
+                "GraphRAG",
+                "LightRAG",
+                "HippoRAG2"
+            ],
+            "performance_gains": [
+                "+19.4% Correct vs GraphRAG",
+                "95% lower update cost vs GraphRAG"
+            ]
+        },
+        "baseline_comparisons_explanation": "Outperforms baselines on ECT-QA; stable perf post-update; generalizes to NQ/HotpotQA.",
+        "graph_summarization_compression": [
+            "hierarchical temporal summaries",
+            "semantic aggregation"
+        ],
+        "graph_summarization_compression_explanation": "Multi-granularity time reports aggregating child summaries + connected facts.",
+        "explainability": [
+            "temporal timelines/event sequences",
+            "path-based/graph-based explanations"
+        ],
+        "explainability_explanation": "Subgraph visualization; retrieved chunks/relations with timestamps.",
+        "scalability_analysis": {
+            "experiments_conducted": "Token costs, graph sizes",
+            "bottleneck_identification": [
+                "full re-summarization"
+            ],
+            "optimization_strategies": [
+                "incremental updates"
+            ]
+        },
+        "scalability_analysis_explanation": "Compact graphs (16K-20K entities); efficient updates.",
+        "real_world_deployment": {
+            "production_deployment": "Not specified",
+            "integration_considerations": [],
+            "operational_challenges": []
+        },
+        "real_world_deployment_explanation": "Designed for evolving corpora like financial reports; no production mention."
+    },
+    "H_novel_technical_contributions": {
+        "algorithmic_innovations": {
+            "novel_algorithms": [
+                "Temporal quadruple extraction",
+                "Bi-level graph construction",
+                "PPR temporal retrieval"
+            ],
+            "complexity_analysis": "N/A",
+            "theoretical_guarantees": []
+        },
+        "algorithmic_innovations_explanation": "Query-centric time ID; dynamic subgraph PPR with temporal edge scoring.",
+        "architecture_patterns": {
+            "system_architecture": "dual-layer",
+            "component_interactions": [
+                "Indexing: extract->build->summarize",
+                "Retrieval: local/global"
+            ],
+            "design_principles": [
+                "incremental",
+                "time-aware"
+            ]
+        },
+        "architecture_patterns_explanation": "Bi-level temporal graph; local (fine-grained facts) + global (summaries) retrieval.",
+        "memory_storage": {
+            "memory_architecture": [
+                "episodic",
+                "semantic"
+            ],
+            "storage_mechanisms": [
+                "in-memory"
+            ],
+            "persistence_strategy": "Not specified"
+        },
+        "memory_storage_explanation": "Embeddings + graph structure; summaries for compression.",
+        "attention_mechanisms": {
+            "temporal_attention": "N/A",
+            "entity_aware_attention": "N/A",
+            "graph_attention_variants": []
+        },
+        "attention_mechanisms_explanation": "No neural attention; PPR for propagation.",
+        "neural_architecture": {
+            "gnn_variants": [],
+            "embedding_techniques": [
+                "text-embedding-3-small"
+            ],
+            "fusion_mechanisms": []
+        },
+        "neural_architecture_explanation": "Precomputed text embeddings for entities/relations; no GNNs."
+    },
+    "I_reproducibility_implementation": {
+        "code_availability": "available",
+        "code_availability_explanation": "GitHub: https://github.com/hanjiale/Temporal-GraphRAG",
+        "implementation_details": {
+            "programming_languages": [],
+            "frameworks": [],
+            "hardware_requirements": "Not specified",
+            "training_inference_costs": "Token-based (e.g., 6.3M prompt/7.1M completion base)"
+        },
+        "implementation_details_explanation": "Chunk size 1200/overlap 100; K=20 relations; Gemini-2.5-flash-lite indexing, GPT-4o-mini QA.",
+        "hyperparameters": {
+            "key_hyperparameters": [
+                "K=20",
+                "L_ctx=12K/24K"
+            ],
+            "sensitivity_analysis": "N/A"
+        },
+        "hyperparameters_explanation": "Top-K=20 relations; context limits 12K local/24K global tokens."
+    },
+    "J_limitations_future_work": {
+        "acknowledged_limitations": {
+            "scalability_limits": [],
+            "temporal_reasoning_gaps": [],
+            "generalization_issues": []
+        },
+        "acknowledged_limitations_explanation": "No explicit limitations section; assumes high-quality LLM extraction.",
+        "future_research_directions": {
+            "open_problems": [],
+            "suggested_improvements": [],
+            "extension_opportunities": []
+        },
+        "future_research_directions_explanation": "None specified; focuses on conclusion."
+    },
+    "K_cross_cutting_concerns": {
+        "provenance_trust": {
+            "source_tracking": "Chunk attribution",
+            "trust_confidence_modeling": "LLM confidence in global points",
+            "attribution_maintenance": "Yes"
+        },
+        "provenance_trust_explanation": "Edges linked to source chunks; global retrieval uses LLM self-assessed confidence.",
+        "privacy_security": {
+            "privacy_considerations": [],
+            "access_control": "N/A",
+            "data_sensitivity": "N/A"
+        },
+        "privacy_security_explanation": "Not discussed.",
+        "multi_modal_support": {
+            "modalities": [
+                "Text-only"
+            ],
+            "cross_modal_reasoning": "N/A"
+        },
+        "multi_modal_support_explanation": "Text chunks from transcripts only.",
+        "domain_adaptation": {
+            "transfer_learning": "N/A",
+            "domain_customization": "N/A",
+            "zero_shot_application": "Generalizes to generic QA"
+        },
+        "domain_adaptation_explanation": "Strong on financial ECT-QA; generalizes to NQ/HotpotQA.",
+        "human_in_the_loop": {
+            "interactive_components": [],
+            "expert_feedback": "N/A",
+            "user_study": "N/A"
+        },
+        "human_in_the_loop_explanation": "Dataset uses human review for QA quality."
+    },
+    "notable_contributions": {
+        "key_innovations": [
+            "Bi-level temporal graph",
+            "Incremental time reports",
+            "Temporal PPR retrieval",
+            "ECT-QA dataset"
+        ],
+        "unique_approaches": [
+            "Parallel timestamped edges for evolution",
+            "Local/global dual retrieval"
+        ],
+        "main_findings": [
+            "Superior temporal QA",
+            "Efficient updates",
+            "Stable post-update perf"
+        ]
+    },
+    "notable_contributions_explanation": "Addresses time-sensitivity in RAG via explicit temporal KG; new incremental eval protocol; outperforms baselines significantly.",
+    "extraction_metadata": {
+        "confidence_level": "High",
+        "ambiguous_classifications": [],
+        "related_papers_mentioned": [
+            "GraphRAG ",
+            "LightRAG ",
+            "HippoRAG2 ",
+            "TimeQA "
+        ],
+        "extraction_notes": "Based on abstract, intro, methods, results; quantitative results from tables; code/dataset released."
+    }
+}

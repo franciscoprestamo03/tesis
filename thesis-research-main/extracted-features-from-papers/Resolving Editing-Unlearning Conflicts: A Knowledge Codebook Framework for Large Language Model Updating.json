@@ -1,0 +1,465 @@
+{
+    "meta": {
+        "title": "Resolving Editing-Unlearning Conflicts: A Knowledge Codebook Framework for Large Language Model Updating",
+        "date": "January 2025",
+        "link": "arXiv:2502.00158v1",
+        "paper_type": "Novel model/system",
+        "paper_type_explanation": "The paper introduces LOKA, a novel framework for LLM knowledge updating that addresses editing-unlearning conflicts using a knowledge codebook with task-specific/multi-task memories, similarity-aware mapping, and a learning-based router."
+    },
+    "A_data_and_task": {
+        "domain_data_type": [
+            "general knowledge",
+            "factual knowledge",
+            "harmful/toxic content"
+        ],
+        "domain_data_type_explanation": "Focuses on QA pairs involving fictitious writers (TOFU), harmful content (PKU-SafeRLHF), and factual relations (ZsRE).",
+        "task_type": [
+            "knowledge editing",
+            "knowledge unlearning",
+            "joint updating"
+        ],
+        "task_type_explanation": "Addresses simultaneous unlearning of unwanted knowledge and editing of new knowledge while preserving retained knowledge.",
+        "dataset_characteristics": {
+            "dataset_names": [
+                "TOFU",
+                "PKU-SafeRLHF",
+                "ZsRE"
+            ],
+            "dataset_size": {
+                "entities": "Not specified",
+                "relations": "Not specified",
+                "triples": "Not specified",
+                "documents": "TOFU: 4,000 QA pairs; subsets ~400-800 samples per task"
+            },
+            "temporal_span": "N/A",
+            "update_frequency": "Sequential updates simulated (10 rounds)"
+        },
+        "dataset_characteristics_explanation": "TOFU has 4,000 QA pairs from 200 writers; PKU-SafeRLHF and ZsRE used with 400 samples each for unlearning/editing; no temporal data.",
+        "benchmark_metrics": [
+            "ROUGE-L",
+            "truth ratio",
+            "success rate",
+            "MIA ROC-AUC",
+            "perplexity",
+            "toxic rate"
+        ],
+        "benchmark_metrics_explanation": "ROUGE-L for editing/retained; truth ratio/MIA for unlearning; success rate/accuracy for remaining knowledge."
+    },
+    "B_graph_kg_structure": {
+        "graph_kg_representation_type": [
+            "N/A"
+        ],
+        "graph_kg_representation_type_explanation": "No explicit graph or KG; uses knowledge codebook with external memories (sparse/dense storage discussed but not graph-based).",
+        "graph_evolution_type": [
+            "Append-only"
+        ],
+        "graph_evolution_type_explanation": "Sequential updating adds new codebooks or uses LSH for incremental mapping without re-clustering.",
+        "node_types": [
+            "N/A"
+        ],
+        "node_types_explanation": "Knowledge stored in codebook memories, not nodes.",
+        "edge_types": [
+            "N/A"
+        ],
+        "edge_types_explanation": "No edges; similarity-based clustering via K-means or LSH.",
+        "graph_schema": {
+            "schema_type": "N/A",
+            "schema_evolution_handling": "N/A"
+        },
+        "graph_schema_explanation": "Schema-free; knowledge mapped via embeddings.",
+        "graph_scale": "N/A",
+        "graph_scale_explanation": "Codebook size ~20 clusters; no node counts specified."
+    },
+    "C_temporal_modeling_and_queries": {
+        "temporal_structure_type": [
+            "N/A"
+        ],
+        "temporal_structure_type_explanation": "No temporal modeling; focuses on knowledge updating without time aspects.",
+        "temporal_granularity": [
+            "none"
+        ],
+        "temporal_granularity_explanation": "N/A",
+        "temporal_representation": [
+            "none"
+        ],
+        "temporal_representation_explanation": "N/A",
+        "temporal_query_handling": [
+            "N/A"
+        ],
+        "temporal_query_handling_explanation": "N/A",
+        "temporal_conflict_redundancy_handling": [
+            "N/A"
+        ],
+        "temporal_conflict_redundancy_handling_explanation": "N/A",
+        "temporal_decay_obsolescence": {
+            "decay_function_type": [],
+            "obsolescence_detection": "N/A",
+            "historical_preservation": "N/A"
+        },
+        "temporal_decay_obsolescence_explanation": "N/A",
+        "multi_hop_temporal_reasoning": {
+            "temporal_path_constraints": "N/A",
+            "temporal_ordering_enforcement": "N/A",
+            "compositional_temporal_queries": "N/A"
+        },
+        "multi_hop_temporal_reasoning_explanation": "N/A"
+    },
+    "D_dynamic_update_mechanisms": {
+        "update_trigger": [
+            "offline batch",
+            "sequential"
+        ],
+        "update_trigger_explanation": "Sequential requests; each adds codebook or incremental via LSH.",
+        "update_policy_control_logic": [
+            "verification-based",
+            "confidence-threshold",
+            "conflict score"
+        ],
+        "update_policy_control_logic_explanation": "Conflict score (cosine similarity of gradients) decides task-specific vs multi-task memories.",
+        "update_scope": [
+            "fact-level"
+        ],
+        "update_scope_explanation": "Knowledge pieces (QA pairs) updated in external memories.",
+        "verification_pipeline": {
+            "verification_stages": [],
+            "verification_methods": [],
+            "confidence_scoring_approach": "Classifier confidence threshold for router activation"
+        },
+        "verification_pipeline_explanation": "BERT classifier for relevance; threshold filters irrelevant prompts.",
+        "conflict_resolution_strategy": {
+            "before_update": [
+                "task-specific memories"
+            ],
+            "after_update": [],
+            "versioning_approach": "Multiple codebooks",
+            "temporal_scoping": "N/A",
+            "provenance_based_resolution": "N/A"
+        },
+        "conflict_resolution_strategy_explanation": "Task-specific memories for heavy conflicts; Pareto optimization (MGDA) for slight conflicts.",
+        "incremental_construction": {
+            "entity_linking_method": "Similarity-aware mapping (K-means/LSH)",
+            "deduplication_strategy": "N/A",
+            "fusion_approach": "N/A"
+        },
+        "incremental_construction_explanation": "LSH for scalable incremental updates without re-clustering.",
+        "update_latency_throughput": {
+            "target_latency": "Not specified",
+            "update_throughput": "Not specified",
+            "scalability_characteristics": "Efficient sequential updates; tradeoff with new codebooks"
+        },
+        "update_latency_throughput_explanation": "Lower latency with LSH vs new codebooks; A100 GPU used."
+    },
+    "E_retrieval_and_reasoning": {
+        "retrieval_unit_granularity": [
+            "knowledge memory",
+            "codebook entry"
+        ],
+        "retrieval_unit_granularity_explanation": "Retrieves relevant memory from codebook based on prompt embedding.",
+        "temporal_awareness_in_retrieval": [
+            "none"
+        ],
+        "temporal_awareness_in_retrieval_explanation": "N/A",
+        "retrieval_strategy": [
+            "similarity-aware mapping",
+            "learning-based router"
+        ],
+        "retrieval_strategy_explanation": "K-means clustering for allocation; BERT classifier + threshold for activation; closest key selection.",
+        "retrieval_indexing": {
+            "index_structure": [
+                "codebook",
+                "embedding-based"
+            ],
+            "index_update_strategy": "Incremental LSH",
+            "query_optimization": []
+        },
+        "retrieval_indexing_explanation": "Embeddings from LLM layer fed to clustering; LSH for incremental.",
+        "reasoning_generation_protocol": [
+            "vanilla LLM with context"
+        ],
+        "reasoning_generation_protocol_explanation": "Retrieved memory plugged into target LLM layer (e.g., FFN) for inference.",
+        "multi_hop_reasoning_support": {
+            "max_hop_depth": "N/A",
+            "path_ranking_mechanism": "N/A",
+            "compositional_reasoning": "N/A"
+        },
+        "multi_hop_reasoning_support_explanation": "N/A",
+        "context_window_management": {
+            "large_graph_strategy": [
+                "N/A"
+            ],
+            "temporal_prioritization": "N/A",
+            "dynamic_context_selection": "Router-based memory selection"
+        },
+        "context_window_management_explanation": "Selective codebook activation avoids irrelevant memories."
+    },
+    "F_llm_role_and_learning": {
+        "llm_role_in_system": [
+            "generator only",
+            "memory manager"
+        ],
+        "llm_role_in_system_explanation": "Original LLM frozen; external memories fine-tuned and plugged in.",
+        "llm_adaptation_mode": [
+            "frozen base model"
+        ],
+        "llm_adaptation_mode_explanation": "Fine-tunes external memories only; no LLM parameter updates.",
+        "llm_integration_pattern": {
+            "as_extractor": "Embeddings from LLM layer",
+            "as_reasoner": "N/A",
+            "as_verifier": "N/A",
+            "as_learner": "N/A"
+        },
+        "llm_integration_pattern_explanation": "Last-token embeddings for mapping; classifier (BERT) for routing.",
+        "prompt_engineering": {
+            "prompting_strategy": [
+                "N/A"
+            ],
+            "temporal_instruction_design": "N/A",
+            "specialized_prompts": []
+        },
+        "prompt_engineering_explanation": "N/A; focus on memory integration.",
+        "continual_learning_support": {
+            "catastrophic_forgetting_mitigation": "External memories preserve original",
+            "knowledge_retention_strategy": "Retained set regularization",
+            "incremental_learning_approach": "Sequential codebooks/LSH"
+        },
+        "continual_learning_support_explanation": "Frozen LLM + external updates prevent forgetting; sequential handling."
+    },
+    "G_evaluation_and_practical": {
+        "evaluation_focus": [
+            "dynamic update quality/stability",
+            "efficiency metrics"
+        ],
+        "evaluation_focus_explanation": "Emphasizes joint editing/unlearning, preservation, sequential stability.",
+        "evaluation_metrics": {
+            "accuracy_metrics": [
+                "ROUGE-L",
+                "success rate",
+                "accuracy"
+            ],
+            "temporal_metrics": [],
+            "update_quality_metrics": [
+                "truth ratio",
+                "MIA ROC-AUC",
+                "toxic rate"
+            ],
+            "efficiency_metrics": [
+                "perplexity",
+                "latency"
+            ],
+            "consistency_metrics": [
+                "remaining F1"
+            ]
+        },
+        "evaluation_metrics_explanation": "LOKA achieves e.g., 0.8044 truth ratio (unlearning), 0.9599 ROUGE-L (editing) on TOFU.",
+        "baseline_comparisons": {
+            "systems_compared": [
+                "GA",
+                "GD",
+                "PO",
+                "NPO",
+                "SKU",
+                "MELO",
+                "GRACE",
+                "WISE",
+                "LLM-Surgery"
+            ],
+            "performance_gains": [
+                "Superior in combined editing (0.85+ edt-tt)",
+                "Better unlearning (0.80+ truth ratio)"
+            ]
+        },
+        "baseline_comparisons_explanation": "Outperforms baselines in joint tasks; addresses overfitting/underfitting.",
+        "graph_summarization_compression": [
+            "implicit summarization"
+        ],
+        "graph_summarization_compression_explanation": "Knowledge clustered in memories; no explicit graph summary.",
+        "explainability": [
+            "N/A"
+        ],
+        "explainability_explanation": "No explicit explanations.",
+        "scalability_analysis": {
+            "experiments_conducted": "Sequential updates (10 rounds)",
+            "bottleneck_identification": [
+                "New codebooks increase latency"
+            ],
+            "optimization_strategies": [
+                "LSH mapping"
+            ]
+        },
+        "scalability_analysis_explanation": "Maintains performance over sequential updates; LSH trades utility for efficiency.",
+        "real_world_deployment": {
+            "production_deployment": "Not specified",
+            "integration_considerations": [],
+            "operational_challenges": []
+        },
+        "real_world_deployment_explanation": "Discusses personalized updating, version control potential."
+    },
+    "H_novel_technical_contributions": {
+        "algorithmic_innovations": {
+            "novel_algorithms": [
+                "similarity-aware knowledge mapping",
+                "conflict-aware training",
+                "learning-based router"
+            ],
+            "complexity_analysis": "N/A",
+            "theoretical_guarantees": [
+                "Theorem on conflicts (Theorem 2.3)",
+                "Proposition on joint optimization (2.4)"
+            ]
+        },
+        "algorithmic_innovations_explanation": "Theoretical proof of editing-unlearning conflicts when datasets similar (d_TV > threshold); task-specific memories guaranteed by Prop. 2.4.",
+        "architecture_patterns": {
+            "system_architecture": "modular (codebook + router)",
+            "component_interactions": [
+                "mapping -> allocation",
+                "router -> retrieval",
+                "memory plug-in"
+            ],
+            "design_principles": [
+                "conflict-free",
+                "incremental"
+            ]
+        },
+        "architecture_patterns_explanation": "Knowledge codebook with K-means/LSH; target layer replacement.",
+        "memory_storage": {
+            "memory_architecture": [
+                "episodic"
+            ],
+            "storage_mechanisms": [
+                "in-memory",
+                "external parameters"
+            ],
+            "persistence_strategy": "Multiple codebooks"
+        },
+        "memory_storage_explanation": "External FFN params from LLM layer; task-specific/multi-task.",
+        "attention_mechanisms": {
+            "temporal_attention": "N/A",
+            "entity_aware_attention": "N/A",
+            "graph_attention_variants": []
+        },
+        "attention_mechanisms_explanation": "N/A",
+        "neural_architecture": {
+            "gnn_variants": [],
+            "embedding_techniques": [
+                "last-token embedding"
+            ],
+            "fusion_mechanisms": [
+                "parameter replacement"
+            ]
+        },
+        "neural_architecture_explanation": "No GNNs; memory fusion via plug-in."
+    },
+    "I_reproducibility_implementation": {
+        "code_availability": "Partially available",
+        "code_availability_explanation": "Code to be released after acceptance.",
+        "implementation_details": {
+            "programming_languages": [
+                "Python"
+            ],
+            "frameworks": [
+                "EasyEdit",
+                "LLM unlearning baselines"
+            ],
+            "hardware_requirements": "80GB A100 GPU",
+            "training_inference_costs": "Not specified"
+        },
+        "implementation_details_explanation": "Llama3-8B/Mistral-7B; target: down projection layer 27.",
+        "hyperparameters": {
+            "key_hyperparameters": [
+                "lr=1e-5 (unlearn), 1e-2 (edit); epochs=5-50; clusters=20; conf thr=70th percentile"
+            ],
+            "sensitivity_analysis": "Yes (conflict thr, conf thr, cluster #)"
+        },
+        "hyperparameters_explanation": "Parameter studies validate robustness."
+    },
+    "J_limitations_future_work": {
+        "acknowledged_limitations": {
+            "scalability_limits": [
+                "New codebooks inefficient for high-freq updates"
+            ],
+            "temporal_reasoning_gaps": [],
+            "generalization_issues": [
+                "Paraphrased performance in some baselines; similar dist. hurts router"
+            ]
+        },
+        "acknowledged_limitations_explanation": "K-means not incremental; LSH trades utility; short-label unlearning easier.",
+        "future_research_directions": {
+            "open_problems": [
+                "Lifelong updating",
+                "personalized versions"
+            ],
+            "suggested_improvements": [
+                "Multi-layer codebooks",
+                "domain-specific objectives"
+            ],
+            "extension_opportunities": [
+                "Version control",
+                "utility-based subsets"
+            ]
+        },
+        "future_research_directions_explanation": "Flexible task objectives; distributed storage for versions."
+    },
+    "K_cross_cutting_concerns": {
+        "provenance_trust": {
+            "source_tracking": "N/A",
+            "trust_confidence_modeling": "Conflict score, classifier confidence",
+            "attribution_maintenance": "N/A"
+        },
+        "provenance_trust_explanation": "Confidence via router; no explicit provenance.",
+        "privacy_security": {
+            "privacy_considerations": [
+                "machine unlearning"
+            ],
+            "access_control": "N/A",
+            "data_sensitivity": "Harmful content handling"
+        },
+        "privacy_security_explanation": "Addresses unlearning for privacy (right-to-be-forgotten).",
+        "multi_modal_support": {
+            "modalities": [
+                "text-only"
+            ],
+            "cross_modal_reasoning": "N/A"
+        },
+        "multi_modal_support_explanation": "Text QA only.",
+        "domain_adaptation": {
+            "transfer_learning": "N/A",
+            "domain_customization": "Flexible objectives",
+            "zero_shot_application": "N/A"
+        },
+        "domain_adaptation_explanation": "Applicable to domains via subsets.",
+        "human_in_the_loop": {
+            "interactive_components": [],
+            "expert_feedback": "N/A",
+            "user_study": "N/A"
+        },
+        "human_in_the_loop_explanation": "N/A"
+    },
+    "notable_contributions": {
+        "key_innovations": [
+            "LOKA framework",
+            "conflict analysis/proof",
+            "similarity-aware mapping + router"
+        ],
+        "unique_approaches": [
+            "Task-specific/multi-task memories via gradient cosine",
+            "LSH incremental"
+        ],
+        "main_findings": [
+            "Sparse: overfitting; dense: underfitting; conflicts when d_TV small"
+        ]
+    },
+    "notable_contributions_explanation": "Introduces benchmark for joint updating; strong empirical gains (e.g., 0.85+ combined editing).",
+    "extraction_metadata": {
+        "confidence_level": "High",
+        "ambiguous_classifications": [
+            "Graph aspects: N/A but codebook analogous to sparse graph"
+        ],
+        "related_papers_mentioned": [
+            "TOFU (Maini et al., 2024)",
+            "GRACE (Hartvigsen et al., 2023)",
+            "WISE (Wang et al., 2024c)",
+            "LLM-Surgery (Veldanda et al., 2024)"
+        ],
+        "extraction_notes": "Paper not on dynamic GraphRAG/temporal KG; focuses on LLM knowledge editing/unlearning via codebooks. Many fields N/A due to mismatch."
+    }
+}

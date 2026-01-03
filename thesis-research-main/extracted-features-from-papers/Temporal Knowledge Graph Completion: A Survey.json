@@ -1,0 +1,391 @@
+{
+    "meta": {
+        "title": "Temporal Knowledge Graph Completion: A Survey",
+        "date": "2023-08",
+        "link": "N/A",
+        "paper_type": "Survey/review paper",
+        "paper_type_explanation": "The paper comprehensively summarizes recent advances in Temporal Knowledge Graph Completion (TKGC) research, categorizing methods, datasets, and evaluation protocols without proposing a new model or system."
+    },
+    "A_data_and_task": {
+        "domain_data_type": [
+            "scientific literature"
+        ],
+        "domain_data_type_explanation": "Focuses on temporal knowledge graphs from event repositories and knowledge bases, such as geopolitical events and wiki data.",
+        "task_type": [
+            "knowledge graph completion",
+            "link prediction"
+        ],
+        "task_type_explanation": "Primary task is predicting missing links in temporal knowledge graphs using temporal validity of facts to capture dynamics.",
+        "dataset_characteristics": {
+            "dataset_names": [
+                "ICEWS14",
+                "ICEWS05-15",
+                "ICEWS18",
+                "GDELT",
+                "YAGO15k",
+                "WIKIDATA"
+            ],
+            "dataset_size": {
+                "entities": "Varies: ICEWS14 (7,128), ICEWS05-15 (10,488), ICEWS18 (23,033), GDELT (500), YAGO15k (15,403), WIKIDATA (11,153)",
+                "relations": "Varies: ICEWS14 (230), ICEWS05-15 (251), ICEWS18 (256), GDELT (20), YAGO15k (32), WIKIDATA (96)",
+                "triples": "Varies: ICEWS14 (90,730), ICEWS05-15 (479,329), ICEWS18 (468,558), GDELT (3,419,607), YAGO15k (138,048), WIKIDATA (150,079)",
+                "documents": "N/A"
+            },
+            "temporal_span": "Not specified",
+            "update_frequency": "Not specified"
+        },
+        "dataset_characteristics_explanation": "Datasets include point timestamps (ICEWS, GDELT) and range timestamps (YAGO15k, WIKIDATA); GDELT has largest facts but abstract entities challenge performance.",
+        "benchmark_metrics": [
+            "Hits@k",
+            "Mean Reciprocal Ranking (MRR)",
+            "Mean Rank (MR)"
+        ],
+        "benchmark_metrics_explanation": "Metrics evaluate link prediction accuracy via ranking true facts among candidates; applied to entity, relation, and time prediction."
+    },
+    "B_graph_kg_structure": {
+        "graph_kg_representation_type": [
+            "Temporal KG"
+        ],
+        "graph_kg_representation_type_explanation": "Knowledge graphs represented as directed multi-relational graphs with temporal validity in facts (quadruples: head, relation, tail, timestamp).",
+        "graph_evolution_type": [
+            "Static (no updates)"
+        ],
+        "graph_evolution_type_explanation": "Survey assumes invariant graphs for TKGC evaluation; future work notes need for evolutionary graphs with updates.",
+        "node_types": [
+            "entities"
+        ],
+        "node_types_explanation": "Nodes are entities; no mention of events, documents, or other specialized nodes.",
+        "edge_types": [
+            "semantic KG relations"
+        ],
+        "edge_types_explanation": "Edges are relations connecting entities; augmented inverse relations for bidirectional prediction.",
+        "graph_schema": {
+            "schema_type": "Not specified",
+            "schema_evolution_handling": "N/A"
+        },
+        "graph_schema_explanation": "No explicit schema discussion; datasets imply fixed relations per benchmark.",
+        "graph_scale": "Medium (10K-1M nodes)",
+        "graph_scale_explanation": "Benchmark datasets range from ~7K to 23K entities, aligning with medium scale."
+    },
+    "C_temporal_modeling_and_queries": {
+        "temporal_structure_type": [
+            "temporal KG"
+        ],
+        "temporal_structure_type_explanation": "Facts include timestamps (points or ranges split into points); captures evolution via representations.",
+        "temporal_granularity": [
+            "timestamp"
+        ],
+        "temporal_granularity_explanation": "Timestamps as points (e.g., 2010) or ranges (e.g., 2010-2013) discretized to points.",
+        "temporal_representation": [
+            "Point-based (discrete timestamps)"
+        ],
+        "temporal_representation_explanation": "Timestamps treated as discrete points; ranges split for convenience.",
+        "temporal_query_handling": [
+            "N/A"
+        ],
+        "temporal_query_handling_explanation": "No explicit query handling; focus on link prediction with given timestamps.",
+        "temporal_conflict_redundancy_handling": [
+            "N/A"
+        ],
+        "temporal_conflict_redundancy_handling_explanation": "Not addressed in survey context.",
+        "temporal_decay_obsolescence": {
+            "decay_function_type": [],
+            "obsolescence_detection": "N/A",
+            "historical_preservation": "N/A"
+        },
+        "temporal_decay_obsolescence_explanation": "Not discussed.",
+        "multi_hop_temporal_reasoning": {
+            "temporal_path_constraints": "N/A",
+            "temporal_ordering_enforcement": "N/A",
+            "compositional_temporal_queries": "N/A"
+        },
+        "multi_hop_temporal_reasoning_explanation": "Some methods (e.g., xERTE, T-GAP) use multi-hop paths with temporal attention/displacement."
+    },
+    "D_dynamic_update_mechanisms": {
+        "update_trigger": [],
+        "update_trigger_explanation": "N/A",
+        "update_policy_control_logic": [],
+        "update_policy_control_logic_explanation": "N/A",
+        "update_scope": [],
+        "update_scope_explanation": "N/A",
+        "verification_pipeline": {
+            "verification_stages": [],
+            "verification_methods": [],
+            "confidence_scoring_approach": "N/A"
+        },
+        "verification_pipeline_explanation": "Not applicable to survey; future work mentions continual learning for updates.",
+        "conflict_resolution_strategy": {
+            "before_update": [],
+            "after_update": [],
+            "versioning_approach": "N/A",
+            "temporal_scoping": "N/A",
+            "provenance_based_resolution": "N/A"
+        },
+        "conflict_resolution_strategy_explanation": "N/A.",
+        "incremental_construction": {
+            "entity_linking_method": "N/A",
+            "deduplication_strategy": "N/A",
+            "fusion_approach": "N/A"
+        },
+        "incremental_construction_explanation": "N/A.",
+        "update_latency_throughput": {
+            "target_latency": "N/A",
+            "update_throughput": "N/A",
+            "scalability_characteristics": "N/A"
+        },
+        "update_latency_throughput_explanation": "Notes training on benchmarks takes hours-days; calls for distributed models."
+    },
+    "E_retrieval_and_reasoning": {
+        "retrieval_unit_granularity": [],
+        "retrieval_unit_granularity_explanation": "N/A",
+        "temporal_awareness_in_retrieval": [],
+        "temporal_awareness_in_retrieval_explanation": "N/A",
+        "retrieval_strategy": [
+            "graph traversal",
+            "path-based/graph-CoT"
+        ],
+        "retrieval_strategy_explanation": "Categorizes methods including reasoning with historical context (attention/heuristic) and snapshots (GNNs).",
+        "retrieval_indexing": {
+            "index_structure": [],
+            "index_update_strategy": "N/A",
+            "query_optimization": []
+        },
+        "retrieval_indexing_explanation": "N/A.",
+        "reasoning_generation_protocol": [
+            "path-based/graph-CoT",
+            "multi-hop path finding"
+        ],
+        "reasoning_generation_protocol_explanation": "Methods like xERTE (subgraph expansion), T-GAP (attention flow), TLmod (rules).",
+        "multi_hop_reasoning_support": {
+            "max_hop_depth": "N/A",
+            "path_ranking_mechanism": "Attention scores",
+            "compositional_reasoning": "N/A"
+        },
+        "multi_hop_reasoning_support_explanation": "Supports via path reasoning in historical context methods.",
+        "context_window_management": {
+            "large_graph_strategy": [],
+            "temporal_prioritization": "N/A",
+            "dynamic_context_selection": "N/A"
+        },
+        "context_window_management_explanation": "N/A."
+    },
+    "F_llm_role_and_learning": {
+        "llm_role_in_system": [],
+        "llm_role_in_system_explanation": "Pre-LLM era survey; no LLM discussion.",
+        "llm_adaptation_mode": [],
+        "llm_adaptation_mode_explanation": "N/A.",
+        "llm_integration_pattern": {
+            "as_extractor": "N/A",
+            "as_reasoner": "N/A",
+            "as_verifier": "N/A",
+            "as_learner": "N/A"
+        },
+        "llm_integration_pattern_explanation": "N/A.",
+        "prompt_engineering": {
+            "prompting_strategy": [],
+            "temporal_instruction_design": "N/A",
+            "specialized_prompts": []
+        },
+        "prompt_engineering_explanation": "N/A.",
+        "continual_learning_support": {
+            "catastrophic_forgetting_mitigation": "Experience replay, knowledge distillation",
+            "knowledge_retention_strategy": "N/A",
+            "incremental_learning_approach": "Frontier work with TIE framework"
+        },
+        "continual_learning_support_explanation": "Future direction: continual learning for evolving graphs to avoid retraining."
+    },
+    "G_evaluation_and_practical": {
+        "evaluation_focus": [
+            "temporal QA accuracy",
+            "domain-specific performance"
+        ],
+        "evaluation_focus_explanation": "Accuracy on link prediction; challenges with unseen timestamps (future/missing).",
+        "evaluation_metrics": {
+            "accuracy_metrics": [
+                "Hits@k",
+                "MRR",
+                "MR"
+            ],
+            "temporal_metrics": [],
+            "update_quality_metrics": [],
+            "efficiency_metrics": [],
+            "consistency_metrics": []
+        },
+        "evaluation_metrics_explanation": "Hits@k (percentage ranks ≤k), MR (avg rank), MRR (inverse avg rank).",
+        "baseline_comparisons": {
+            "systems_compared": [],
+            "performance_gains": []
+        },
+        "baseline_comparisons_explanation": "No direct comparisons due to implementation differences; summarizes TKGC vs KGC improvements.",
+        "graph_summarization_compression": [],
+        "graph_summarization_compression_explanation": "N/A.",
+        "explainability": [
+            "path-based/graph-based explanations"
+        ],
+        "explainability_explanation": "Rule-based (TLogic, TLmod) and path methods (xERTE, T-GAP) provide interpretable reasoning.",
+        "scalability_analysis": {
+            "experiments_conducted": "N/A",
+            "bottleneck_identification": [
+                "Large parameter sizes",
+                "Training time"
+            ],
+            "optimization_strategies": [
+                "Distributed models",
+                "Compositional embeddings"
+            ]
+        },
+        "scalability_analysis_explanation": "Benchmarks time-consuming; real-world graphs need distributed/compositional approaches.",
+        "real_world_deployment": {
+            "production_deployment": "N/A",
+            "integration_considerations": [],
+            "operational_challenges": []
+        },
+        "real_world_deployment_explanation": "N/A."
+    },
+    "H_novel_technical_contributions": {
+        "algorithmic_innovations": {
+            "novel_algorithms": [
+                "Taxonomy of TKGC methods"
+            ],
+            "complexity_analysis": "N/A",
+            "theoretical_guarantees": []
+        },
+        "algorithmic_innovations_explanation": "Proposes taxonomy based on timestamp integration: tensor decomposition, time-based transformation, dynamic embedding, snapshots, historical reasoning, logical rules.",
+        "architecture_patterns": {
+            "system_architecture": "N/A",
+            "component_interactions": [],
+            "design_principles": []
+        },
+        "architecture_patterns_explanation": "N/A.",
+        "memory_storage": {
+            "memory_architecture": [],
+            "storage_mechanisms": [],
+            "persistence_strategy": "N/A"
+        },
+        "memory_storage_explanation": "N/A.",
+        "attention_mechanisms": {
+            "temporal_attention": "Temporal relational graph attention (xERTE)",
+            "entity_aware_attention": "N/A",
+            "graph_attention_variants": [
+                "Attention flow (T-GAP)"
+            ]
+        },
+        "attention_mechanisms_explanation": "Used in historical context reasoning.",
+        "neural_architecture": {
+            "gnn_variants": [
+                "RE-GCN",
+                "TeMP (multi-hop message passing)"
+            ],
+            "embedding_techniques": [
+                "Tensor decomposition (CP, Tucker)",
+                "Dynamic embeddings (RNN, ODE)"
+            ],
+            "fusion_mechanisms": []
+        },
+        "neural_architecture_explanation": "Summarizes GNNs for snapshots, RNNs for dynamics."
+    },
+    "I_reproducibility_implementation": {
+        "code_availability": "Not specified",
+        "code_availability_explanation": "No code provided; notes implementation differences prevent performance comparisons.",
+        "implementation_details": {
+            "programming_languages": [],
+            "frameworks": [],
+            "hardware_requirements": "N/A",
+            "training_inference_costs": "Hours to days on benchmarks"
+        },
+        "implementation_details_explanation": "N/A.",
+        "hyperparameters": {
+            "key_hyperparameters": [
+                "Margin γ in losses"
+            ],
+            "sensitivity_analysis": "N/A"
+        },
+        "hyperparameters_explanation": "Mentions losses (margin ranking, cross-entropy, binary cross-entropy)."
+    },
+    "J_limitations_future_work": {
+        "acknowledged_limitations": {
+            "scalability_limits": [
+                "Training time on benchmarks",
+                "Large real-world graphs"
+            ],
+            "temporal_reasoning_gaps": [
+                "GDELT performance",
+                "Unbalanced facts"
+            ],
+            "generalization_issues": [
+                "Unseen timestamps",
+                "Negative sampling"
+            ]
+        },
+        "acknowledged_limitations_explanation": "Low accuracy on GDELT due to abstract entities; lacks time-aware negatives, external knowledge.",
+        "future_research_directions": {
+            "open_problems": [
+                "Time-aware negative sampling",
+                "Evolutionary graphs",
+                "Larger-scale KGs"
+            ],
+            "suggested_improvements": [
+                "External knowledge (PLMs, types)",
+                "Distributed models",
+                "Continual learning"
+            ],
+            "extension_opportunities": [
+                "Compositional embeddings"
+            ]
+        },
+        "future_research_directions_explanation": "Incorporate external knowledge, time-aware negatives, distributed training, continual learning for updates."
+    },
+    "K_cross_cutting_concerns": {
+        "provenance_trust": {
+            "source_tracking": "N/A",
+            "trust_confidence_modeling": "N/A",
+            "attribution_maintenance": "N/A"
+        },
+        "provenance_trust_explanation": "N/A.",
+        "privacy_security": {
+            "privacy_considerations": [],
+            "access_control": "N/A",
+            "data_sensitivity": "N/A"
+        },
+        "privacy_security_explanation": "N/A.",
+        "multi_modal_support": {
+            "modalities": [
+                "Text-only"
+            ],
+            "cross_modal_reasoning": "N/A"
+        },
+        "multi_modal_support_explanation": "Text/event-based only.",
+        "domain_adaptation": {
+            "transfer_learning": "N/A",
+            "domain_customization": "N/A",
+            "zero_shot_application": "N/A"
+        },
+        "domain_adaptation_explanation": "N/A.",
+        "human_in_the_loop": {
+            "interactive_components": [],
+            "expert_feedback": "N/A",
+            "user_study": "N/A"
+        },
+        "human_in_the_loop_explanation": "N/A."
+    },
+    "notable_contributions": {
+        "key_innovations": [
+            "TKGC taxonomy by timestamp integration"
+        ],
+        "unique_approaches": [
+            "Categorization into 6 method types"
+        ],
+        "main_findings": [
+            "TKGC outperforms static KGC; challenges in scalability and generalization"
+        ]
+    },
+    "notable_contributions_explanation": "First comprehensive TKGC survey with taxonomy, dataset summary, and future directions.",
+    "extraction_metadata": {
+        "confidence_level": "High",
+        "ambiguous_classifications": [],
+        "related_papers_mentioned": [
+            "Many TKGC methods (e.g., TTransE, HyTE, Know-Evolve); KGC baselines (TransE)"
+        ],
+        "extraction_notes": "Paper is a survey, so many fields N/A; focuses on embedding/representation methods pre-LLM/GraphRAG era. No DOI/link extracted from text."
+    }
+}

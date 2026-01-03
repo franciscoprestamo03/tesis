@@ -1,0 +1,295 @@
+{
+    "meta": {
+        "title": "",
+        "date": "",
+        "link": "",
+        "paper_type": "",
+        "paper_type_explanation": ""
+    },
+    "A_data_and_task": {
+        "domain_data_type": [],
+        "domain_data_type_explanation": "",
+        "task_type": [],
+        "task_type_explanation": "",
+        "dataset_characteristics": {
+            "dataset_names": [],
+            "dataset_size": {
+                "entities": "",
+                "relations": "",
+                "triples": "",
+                "documents": ""
+            },
+            "temporal_span": "",
+            "update_frequency": ""
+        },
+        "dataset_characteristics_explanation": "",
+        "benchmark_metrics": [],
+        "benchmark_metrics_explanation": ""
+    },
+    "B_graph_kg_structure": {
+        "graph_kg_representation_type": [],
+        "graph_kg_representation_type_explanation": "",
+        "graph_evolution_type": [],
+        "graph_evolution_type_explanation": "",
+        "node_types": [],
+        "node_types_explanation": "",
+        "edge_types": [],
+        "edge_types_explanation": "",
+        "graph_schema": {
+            "schema_type": "",
+            "schema_evolution_handling": ""
+        },
+        "graph_schema_explanation": "",
+        "graph_scale": "",
+        "graph_scale_explanation": ""
+    },
+    "C_temporal_modeling_and_queries": {
+        "temporal_structure_type": [],
+        "temporal_structure_type_explanation": "",
+        "temporal_granularity": [],
+        "temporal_granularity_explanation": "",
+        "temporal_representation": [],
+        "temporal_representation_explanation": "",
+        "temporal_query_handling": [],
+        "temporal_query_handling_explanation": "",
+        "temporal_conflict_redundancy_handling": [],
+        "temporal_conflict_redundancy_handling_explanation": "",
+        "temporal_decay_obsolescence": {
+            "decay_function_type": [],
+            "obsolescence_detection": "",
+            "historical_preservation": ""
+        },
+        "temporal_decay_obsolescence_explanation": "",
+        "multi_hop_temporal_reasoning": {
+            "temporal_path_constraints": "",
+            "temporal_ordering_enforcement": "",
+            "compositional_temporal_queries": ""
+        },
+        "multi_hop_temporal_reasoning_explanation": ""
+    },
+    "D_dynamic_update_mechanisms": {
+        "update_trigger": [],
+        "update_trigger_explanation": "",
+        "update_policy_control_logic": [],
+        "update_policy_control_logic_explanation": "",
+        "update_scope": [],
+        "update_scope_explanation": "",
+        "verification_pipeline": {
+            "verification_stages": [],
+            "verification_methods": [],
+            "confidence_scoring_approach": ""
+        },
+        "verification_pipeline_explanation": "",
+        "conflict_resolution_strategy": {
+            "before_update": [],
+            "after_update": [],
+            "versioning_approach": "",
+            "temporal_scoping": "",
+            "provenance_based_resolution": ""
+        },
+        "conflict_resolution_strategy_explanation": "",
+        "incremental_construction": {
+            "entity_linking_method": "",
+            "deduplication_strategy": "",
+            "fusion_approach": ""
+        },
+        "incremental_construction_explanation": "",
+        "update_latency_throughput": {
+            "target_latency": "",
+            "update_throughput": "",
+            "scalability_characteristics": ""
+        },
+        "update_latency_throughput_explanation": ""
+    },
+    "E_retrieval_and_reasoning": {
+        "retrieval_unit_granularity": [],
+        "retrieval_unit_granularity_explanation": "",
+        "temporal_awareness_in_retrieval": [],
+        "temporal_awareness_in_retrieval_explanation": "",
+        "retrieval_strategy": [],
+        "retrieval_strategy_explanation": "",
+        "retrieval_indexing": {
+            "index_structure": [],
+            "index_update_strategy": "",
+            "query_optimization": []
+        },
+        "retrieval_indexing_explanation": "",
+        "reasoning_generation_protocol": [],
+        "reasoning_generation_protocol_explanation": "",
+        "multi_hop_reasoning_support": {
+            "max_hop_depth": "",
+            "path_ranking_mechanism": "",
+            "compositional_reasoning": ""
+        },
+        "multi_hop_reasoning_support_explanation": "",
+        "context_window_management": {
+            "large_graph_strategy": [],
+            "temporal_prioritization": "",
+            "dynamic_context_selection": ""
+        },
+        "context_window_management_explanation": ""
+    },
+    "F_llm_role_and_learning": {
+        "llm_role_in_system": [],
+        "llm_role_in_system_explanation": "",
+        "llm_adaptation_mode": [],
+        "llm_adaptation_mode_explanation": "",
+        "llm_integration_pattern": {
+            "as_extractor": "",
+            "as_reasoner": "",
+            "as_verifier": "",
+            "as_learner": ""
+        },
+        "llm_integration_pattern_explanation": "",
+        "prompt_engineering": {
+            "prompting_strategy": [],
+            "temporal_instruction_design": "",
+            "specialized_prompts": []
+        },
+        "prompt_engineering_explanation": "",
+        "continual_learning_support": {
+            "catastrophic_forgetting_mitigation": "",
+            "knowledge_retention_strategy": "",
+            "incremental_learning_approach": ""
+        },
+        "continual_learning_support_explanation": ""
+    },
+    "G_evaluation_and_practical": {
+        "evaluation_focus": [],
+        "evaluation_focus_explanation": "",
+        "evaluation_metrics": {
+            "accuracy_metrics": [],
+            "temporal_metrics": [],
+            "update_quality_metrics": [],
+            "efficiency_metrics": [],
+            "consistency_metrics": []
+        },
+        "evaluation_metrics_explanation": "",
+        "baseline_comparisons": {
+            "systems_compared": [],
+            "performance_gains": []
+        },
+        "baseline_comparisons_explanation": "",
+        "graph_summarization_compression": [],
+        "graph_summarization_compression_explanation": "",
+        "explainability": [],
+        "explainability_explanation": "",
+        "scalability_analysis": {
+            "experiments_conducted": "",
+            "bottleneck_identification": [],
+            "optimization_strategies": []
+        },
+        "scalability_analysis_explanation": "",
+        "real_world_deployment": {
+            "production_deployment": "",
+            "integration_considerations": [],
+            "operational_challenges": []
+        },
+        "real_world_deployment_explanation": ""
+    },
+    "H_novel_technical_contributions": {
+        "algorithmic_innovations": {
+            "novel_algorithms": [],
+            "complexity_analysis": "",
+            "theoretical_guarantees": []
+        },
+        "algorithmic_innovations_explanation": "",
+        "architecture_patterns": {
+            "system_architecture": "",
+            "component_interactions": [],
+            "design_principles": []
+        },
+        "architecture_patterns_explanation": "",
+        "memory_storage": {
+            "memory_architecture": [],
+            "storage_mechanisms": [],
+            "persistence_strategy": ""
+        },
+        "memory_storage_explanation": "",
+        "attention_mechanisms": {
+            "temporal_attention": "",
+            "entity_aware_attention": "",
+            "graph_attention_variants": []
+        },
+        "attention_mechanisms_explanation": "",
+        "neural_architecture": {
+            "gnn_variants": [],
+            "embedding_techniques": [],
+            "fusion_mechanisms": []
+        },
+        "neural_architecture_explanation": ""
+    },
+    "I_reproducibility_implementation": {
+        "code_availability": "",
+        "code_availability_explanation": "",
+        "implementation_details": {
+            "programming_languages": [],
+            "frameworks": [],
+            "hardware_requirements": "",
+            "training_inference_costs": ""
+        },
+        "implementation_details_explanation": "",
+        "hyperparameters": {
+            "key_hyperparameters": [],
+            "sensitivity_analysis": ""
+        },
+        "hyperparameters_explanation": ""
+    },
+    "J_limitations_future_work": {
+        "acknowledged_limitations": {
+            "scalability_limits": [],
+            "temporal_reasoning_gaps": [],
+            "generalization_issues": []
+        },
+        "acknowledged_limitations_explanation": "",
+        "future_research_directions": {
+            "open_problems": [],
+            "suggested_improvements": [],
+            "extension_opportunities": []
+        },
+        "future_research_directions_explanation": ""
+    },
+    "K_cross_cutting_concerns": {
+        "provenance_trust": {
+            "source_tracking": "",
+            "trust_confidence_modeling": "",
+            "attribution_maintenance": ""
+        },
+        "provenance_trust_explanation": "",
+        "privacy_security": {
+            "privacy_considerations": [],
+            "access_control": "",
+            "data_sensitivity": ""
+        },
+        "privacy_security_explanation": "",
+        "multi_modal_support": {
+            "modalities": [],
+            "cross_modal_reasoning": ""
+        },
+        "multi_modal_support_explanation": "",
+        "domain_adaptation": {
+            "transfer_learning": "",
+            "domain_customization": "",
+            "zero_shot_application": ""
+        },
+        "domain_adaptation_explanation": "",
+        "human_in_the_loop": {
+            "interactive_components": [],
+            "expert_feedback": "",
+            "user_study": ""
+        },
+        "human_in_the_loop_explanation": ""
+    },
+    "notable_contributions": {
+        "key_innovations": [],
+        "unique_approaches": [],
+        "main_findings": []
+    },
+    "notable_contributions_explanation": "",
+    "extraction_metadata": {
+        "confidence_level": "",
+        "ambiguous_classifications": [],
+        "related_papers_mentioned": [],
+        "extraction_notes": ""
+    }
+}

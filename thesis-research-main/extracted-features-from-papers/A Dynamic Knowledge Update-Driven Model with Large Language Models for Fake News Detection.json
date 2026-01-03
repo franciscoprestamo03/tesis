@@ -1,0 +1,416 @@
+{
+    "meta": {
+        "title": "A Dynamic Knowledge Update-Driven Model with Large Language Models for Fake News Detection",
+        "date": "2025-09",
+        "link": "arXiv:2509.11687v1",
+        "paper_type": "Novel model/system",
+        "paper_type_explanation": "The paper introduces DYNAMO, a novel system combining LLMs and dynamic knowledge graphs for fake news detection with continuous updates.",
+        "pdf": "2509.11687v1.pdf"
+    },
+    "A_data_and_task": {
+        "domain_data_type": [
+            "news streams"
+        ],
+        "domain_data_type_explanation": "Focuses on news events from social media and internet sources requiring timely updates due to evolving authenticity.",
+        "task_type": [
+            "fake news detection",
+            "fact verification"
+        ],
+        "task_type_explanation": "Primary task is binary classification of news as Real or Fake, using multi-hop reasoning and knowledge verification.",
+        "dataset_characteristics": {
+            "dataset_names": [
+                "Hover",
+                "Feverous"
+            ],
+            "dataset_size": {
+                "entities": "Not specified",
+                "relations": "Not specified",
+                "triples": "Not specified",
+                "documents": "Hover: 18,171 samples; Feverous: 26,928 samples (filtered to sentence evidence)"
+            },
+            "temporal_span": "Not specified",
+            "update_frequency": "Not specified"
+        },
+        "dataset_characteristics_explanation": "Datasets consist of multi-hop factual statements from Wikipedia; Hover has 18,171 samples, Feverous 26,928 (using natural language sentence evidence). Subsets used to test dynamic updates on similar events.",
+        "benchmark_metrics": [
+            "Accuracy",
+            "F1",
+            "Precision",
+            "Recall"
+        ],
+        "benchmark_metrics_explanation": "DYNAMO achieves top results: Hover (Acc 0.6250, F1 0.7401, P 0.7367, R 0.7436); Feverous (Acc 0.6167, F1 0.7433, P 0.7384, R 0.7483)."
+    },
+    "B_graph_kg_structure": {
+        "graph_kg_representation_type": [
+            "Static KG"
+        ],
+        "graph_kg_representation_type_explanation": "News-domain-specific KG with entities E, relations R, triples S; built via LLM entity/relation extraction, enhanced dynamically. Not explicitly temporal.",
+        "graph_evolution_type": [
+            "Updatable (can revise/override)"
+        ],
+        "graph_evolution_type_explanation": "Dynamic updates append new triples from verified real news texts and reasoning paths to existing KG.",
+        "node_types": [
+            "entities"
+        ],
+        "node_types_explanation": "Nodes are entities extracted from reliable news texts; events handled via subject-predicate-object triples.",
+        "edge_types": [
+            "semantic KG relations"
+        ],
+        "edge_types_explanation": "Relations extracted generatively by LLM (entity-centered and event-centered), e.g., 'father', 'job', 'superior'.",
+        "graph_schema": {
+            "schema_type": "schema-free",
+            "schema_evolution_handling": "N/A"
+        },
+        "graph_schema_explanation": "No fixed ontology mentioned; relations generated dynamically via LLM prompting.",
+        "graph_scale": "Not specified",
+        "graph_scale_explanation": "Scale not quantified; built from reliable news sources, subgraphs retrieved (top-K=5 triples)."
+    },
+    "C_temporal_modeling_and_queries": {
+        "temporal_structure_type": [],
+        "temporal_structure_type_explanation": "No explicit temporal KG or event-centric modeling; focuses on news timeliness via dynamic updates, not structured time.",
+        "temporal_granularity": [],
+        "temporal_granularity_explanation": "N/A",
+        "temporal_representation": [],
+        "temporal_representation_explanation": "N/A; mentions events' suddenness/unstability but no formal temporal reps.",
+        "temporal_query_handling": [],
+        "temporal_query_handling_explanation": "N/A",
+        "temporal_conflict_redundancy_handling": [],
+        "temporal_conflict_redundancy_handling_explanation": "No temporal conflicts; updates only from verified real news.",
+        "temporal_decay_obsolescence": {
+            "decay_function_type": [],
+            "obsolescence_detection": "N/A",
+            "historical_preservation": "N/A"
+        },
+        "temporal_decay_obsolescence_explanation": "N/A",
+        "multi_hop_temporal_reasoning": {
+            "temporal_path_constraints": "N/A",
+            "temporal_ordering_enforcement": "N/A",
+            "compositional_temporal_queries": "N/A"
+        },
+        "multi_hop_temporal_reasoning_explanation": "Multi-hop via MCTS paths and KG subgraphs, but no temporal aspects."
+    },
+    "D_dynamic_update_mechanisms": {
+        "update_trigger": [
+            "query-driven"
+        ],
+        "update_trigger_explanation": "Triggered after fake news detection: for verified real news, extract/update triples.",
+        "update_policy_control_logic": [
+            "verification-based"
+        ],
+        "update_policy_control_logic_explanation": "Only update from news detected as REAL via MCTS majority voting.",
+        "update_scope": [
+            "fact-level"
+        ],
+        "update_scope_explanation": "New triples (entities, relations) extracted from news text + reasoning paths.",
+        "verification_pipeline": {
+            "verification_stages": [
+                "semantic"
+            ],
+            "verification_methods": [
+                "LLM reasoning via MCTS"
+            ],
+            "confidence_scoring_approach": "Majority voting on MCTS leaf nodes"
+        },
+        "verification_pipeline_explanation": "MCTS decomposes news into sub-questions, answers with KG/internal knowledge, detects via majority.",
+        "conflict_resolution_strategy": {
+            "before_update": [],
+            "after_update": [],
+            "versioning_approach": "N/A",
+            "temporal_scoping": "N/A",
+            "provenance_based_resolution": "N/A"
+        },
+        "conflict_resolution_strategy_explanation": "No explicit conflicts; assumes verified real news is reliable.",
+        "incremental_construction": {
+            "entity_linking_method": "LLM entity extraction + matching to KG",
+            "deduplication_strategy": "Not specified",
+            "fusion_approach": "Append new triples"
+        },
+        "incremental_construction_explanation": "Extract entities, generate relations/triples via LLM, append to G.",
+        "update_latency_throughput": {
+            "target_latency": "Not specified",
+            "update_throughput": "Not specified",
+            "scalability_characteristics": "Not specified"
+        },
+        "update_latency_throughput_explanation": "N/A"
+    },
+    "E_retrieval_and_reasoning": {
+        "retrieval_unit_granularity": [
+            "triple"
+        ],
+        "retrieval_unit_granularity_explanation": "Top-K (5) triples from 1-hop KG subgraph matching sub-question entities.",
+        "temporal_awareness_in_retrieval": [],
+        "temporal_awareness_in_retrieval_explanation": "N/A",
+        "retrieval_strategy": [
+            "graph traversal"
+        ],
+        "retrieval_strategy_explanation": "Entity matching -> 1-hop subgraph -> LLM ranks/selects top-K triples.",
+        "retrieval_indexing": {
+            "index_structure": [],
+            "index_update_strategy": "",
+            "query_optimization": []
+        },
+        "retrieval_indexing_explanation": "N/A",
+        "reasoning_generation_protocol": [
+            "path-based/graph-CoT",
+            "multi-hop path finding"
+        ],
+        "reasoning_generation_protocol_explanation": "MCTS generates reasoning paths: sub-question gen/answer/detect; majority voting.",
+        "multi_hop_reasoning_support": {
+            "max_hop_depth": "Height limit h=5 (Hover)/9 (Feverous)",
+            "path_ranking_mechanism": "UCT with rewards",
+            "compositional_reasoning": "MCTS tree search"
+        },
+        "multi_hop_reasoning_support_explanation": "MCTS explores paths up to depth h; UCT selection with majority-based rewards.",
+        "context_window_management": {
+            "large_graph_strategy": [
+                "summarization"
+            ],
+            "temporal_prioritization": "N/A",
+            "dynamic_context_selection": "Top-K triples ranked by LLM"
+        },
+        "context_window_management_explanation": "Limit to top-5 relevant triples to fit LLM input."
+    },
+    "F_llm_role_and_learning": {
+        "llm_role_in_system": [
+            "graph constructor",
+            "verifier",
+            "reasoner"
+        ],
+        "llm_role_in_system_explanation": "LLM builds initial KG, performs MCTS reasoning/detection, extracts new triples.",
+        "llm_adaptation_mode": [
+            "frozen base model",
+            "in-context learning"
+        ],
+        "llm_adaptation_mode_explanation": "Phi3-mini-128k with few-shot (3 samples); no fine-tuning beyond setup.",
+        "llm_integration_pattern": {
+            "as_extractor": "Entity/relation/triple extraction from text",
+            "as_reasoner": "MCTS sub-Q gen/answer/detect",
+            "as_verifier": "News authenticity via reasoning paths",
+            "as_learner": "N/A"
+        },
+        "llm_integration_pattern_explanation": "Generative extraction (entity-centered, event-centered); reasoning guided by prompts/actions.",
+        "prompt_engineering": {
+            "prompting_strategy": [
+                "few-shot",
+                "chain-of-thought"
+            ],
+            "temporal_instruction_design": "N/A",
+            "specialized_prompts": [
+                "sub-question generation",
+                "triple ranking"
+            ]
+        },
+        "prompt_engineering_explanation": "Few-shot (3); CoT via MCTS steps; specific for actions A1-A3, triple extraction/ranking.",
+        "continual_learning_support": {
+            "catastrophic_forgetting_mitigation": "N/A",
+            "knowledge_retention_strategy": "N/A",
+            "incremental_learning_approach": "N/A"
+        },
+        "continual_learning_support_explanation": "N/A; uses external KG updates instead."
+    },
+    "G_evaluation_and_practical": {
+        "evaluation_focus": [
+            "dynamic update quality/stability",
+            "domain-specific performance"
+        ],
+        "evaluation_focus_explanation": "Fake news accuracy; dynamic KG update gains (~1% acc); ablation on components/LLMs.",
+        "evaluation_metrics": {
+            "accuracy_metrics": [
+                "Accuracy",
+                "F1",
+                "Precision",
+                "Recall"
+            ],
+            "temporal_metrics": [],
+            "update_quality_metrics": [],
+            "efficiency_metrics": [],
+            "consistency_metrics": []
+        },
+        "evaluation_metrics_explanation": "SOTA on Hover/Feverous; KG updates improve acc by avg 1%; robust to h param.",
+        "baseline_comparisons": {
+            "systems_compared": [
+                "RoBERTa-NLI",
+                "BERT-FC",
+                "GET",
+                "ProgramFC",
+                "TOG",
+                "CoRAG",
+                "Phi3-mini"
+            ],
+            "performance_gains": [
+                "DYNAMO outperforms all baselines across Acc/F1/P/R"
+            ]
+        },
+        "baseline_comparisons_explanation": "Beats traditional/LLM baselines; e.g., Hover Acc 62.50% vs Phi3-mini 58.50%. Gains from MCTS+KG.",
+        "graph_summarization_compression": [
+            "implicit summarization"
+        ],
+        "graph_summarization_compression_explanation": "Top-K triple selection as subgraph summary.",
+        "explainability": [
+            "reasoning trace visualization"
+        ],
+        "explainability_explanation": "MCTS paths provide step-by-step reasoning/sub-Q answers.",
+        "scalability_analysis": {
+            "experiments_conducted": "Ablation on h param",
+            "bottleneck_identification": [],
+            "optimization_strategies": [
+                "MCTS height limit"
+            ]
+        },
+        "scalability_analysis_explanation": "Robust to MCTS depth h; optimal h=5/9 per dataset. No large-scale tests.",
+        "real_world_deployment": {
+            "production_deployment": "Not specified",
+            "integration_considerations": [],
+            "operational_challenges": []
+        },
+        "real_world_deployment_explanation": "N/A"
+    },
+    "H_novel_technical_contributions": {
+        "algorithmic_innovations": {
+            "novel_algorithms": [
+                "MCTS for news decomposition"
+            ],
+            "complexity_analysis": "N/A",
+            "theoretical_guarantees": []
+        },
+        "algorithmic_innovations_explanation": "MCTS with 3 actions (sub-Q gen/answer/detect), UCT rewards via majority consistency.",
+        "architecture_patterns": {
+            "system_architecture": "dual-layer",
+            "component_interactions": [
+                "KG construction",
+                "MCTS inference",
+                "dynamic update"
+            ],
+            "design_principles": [
+                "timeliness via KG updates"
+            ]
+        },
+        "architecture_patterns_explanation": "KG-LLM loop: construct -> retrieve/enhance MCTS -> update from real news.",
+        "memory_storage": {
+            "memory_architecture": [
+                "semantic"
+            ],
+            "storage_mechanisms": [
+                "in-memory"
+            ],
+            "persistence_strategy": "Not specified"
+        },
+        "memory_storage_explanation": "KG as persistent external memory; updated incrementally.",
+        "attention_mechanisms": {
+            "temporal_attention": "N/A",
+            "entity_aware_attention": "N/A",
+            "graph_attention_variants": []
+        },
+        "attention_mechanisms_explanation": "N/A",
+        "neural_architecture": {
+            "gnn_variants": [],
+            "embedding_techniques": [],
+            "fusion_mechanisms": []
+        },
+        "neural_architecture_explanation": "No GNNs; LLM-centric with KG retrieval."
+    },
+    "I_reproducibility_implementation": {
+        "code_availability": "not available",
+        "code_availability_explanation": "No code release mentioned.",
+        "implementation_details": {
+            "programming_languages": [
+                "Python"
+            ],
+            "frameworks": [
+                "PyTorch"
+            ],
+            "hardware_requirements": "NVIDIA A40 48GB GPU, Intel Xeon Gold 6326 CPU",
+            "training_inference_costs": "Few-shot: 3 samples, 5 epochs"
+        },
+        "implementation_details_explanation": "PyTorch 2.5.0; Phi3-mini-128k; MCTS n=5, top-K=5, c=2.",
+        "hyperparameters": {
+            "key_hyperparameters": [
+                "MCTS n=5",
+                "h=5 (Hover)/9 (Feverous)",
+                "top-K=5",
+                "few-shot=3"
+            ],
+            "sensitivity_analysis": "Robust to h variations"
+        },
+        "hyperparameters_explanation": "h sensitivity tested; optimal per dataset."
+    },
+    "J_limitations_future_work": {
+        "acknowledged_limitations": {
+            "scalability_limits": [],
+            "temporal_reasoning_gaps": [],
+            "generalization_issues": []
+        },
+        "acknowledged_limitations_explanation": "Fake news may mix true/false info; current method extracts only from full real news.",
+        "future_research_directions": {
+            "open_problems": [
+                "fine-grained extraction from fake news"
+            ],
+            "suggested_improvements": [
+                "Distinguish true/false parts in fake news for partial updates"
+            ],
+            "extension_opportunities": []
+        },
+        "future_research_directions_explanation": "Fine-grained knowledge from fake news' true parts to maximize utilization."
+    },
+    "K_cross_cutting_concerns": {
+        "provenance_trust": {
+            "source_tracking": "Reliable news sources for initial KG",
+            "trust_confidence_modeling": "Majority voting on MCTS",
+            "attribution_maintenance": "N/A"
+        },
+        "provenance_trust_explanation": "Initial KG from reliable sources; updates only from detected real news.",
+        "privacy_security": {
+            "privacy_considerations": [],
+            "access_control": "N/A",
+            "data_sensitivity": "N/A"
+        },
+        "privacy_security_explanation": "N/A",
+        "multi_modal_support": {
+            "modalities": [
+                "text-only"
+            ],
+            "cross_modal_reasoning": "N/A"
+        },
+        "multi_modal_support_explanation": "Text/news only.",
+        "domain_adaptation": {
+            "transfer_learning": "N/A",
+            "domain_customization": "News-domain KG",
+            "zero_shot_application": "Few-shot LLM"
+        },
+        "domain_adaptation_explanation": "News-specific KG; works across LLMs (Phi3, LLaMA, Flan-T5).",
+        "human_in_the_loop": {
+            "interactive_components": [],
+            "expert_feedback": "N/A",
+            "user_study": "N/A"
+        },
+        "human_in_the_loop_explanation": "N/A"
+    },
+    "notable_contributions": {
+        "key_innovations": [
+            "Dynamic KG updates verified via fake news detection",
+            "MCTS for news decomposition + KG enhancement"
+        ],
+        "unique_approaches": [
+            "Dual LLM roles: detect + extract/verify new knowledge"
+        ],
+        "main_findings": [
+            "SOTA performance; ~1% acc gain from updates; robust across LLMs"
+        ]
+    },
+    "notable_contributions_explanation": "Addresses timeliness in fake news via KG updates from verified news; MCTS uncovers semantics. Related: DALK, PEG (KG+LLM but no dynamic updates).",
+    "extraction_metadata": {
+        "confidence_level": "High",
+        "ambiguous_classifications": [
+            "Temporal aspects: static KG despite dynamic news"
+        ],
+        "related_papers_mentioned": [
+            "ProgramFC",
+            "TOG",
+            "DALK",
+            "PEG",
+            "STEEL",
+            "VeraCT Scan"
+        ],
+        "extraction_notes": "Paper aligns partially with GraphRAG/dynamic KG via updatable KG+LLM for news; lacks explicit temporality. Quantitative results extracted from tables."
+    }
+}

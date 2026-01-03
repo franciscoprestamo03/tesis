@@ -1,0 +1,457 @@
+{
+    "meta": {
+        "title": "Temporal Reasoning over Evolving Knowledge Graphs",
+        "date": "2025-09",
+        "link": "arXiv:2509.15464v1",
+        "paper_type": "Novel model/system",
+        "paper_type_explanation": "The paper proposes a unified framework consisting of EVOREASONER (reasoning algorithm) and EvoKG (knowledge graph evolution module)."
+    },
+    "A_data_and_task": {
+        "domain_data_type": [
+            "temporal QA",
+            "news streams",
+            "entertainment (movies)",
+            "sports"
+        ],
+        "domain_data_type_explanation": "Evaluated on general temporal QA (Wikidata-based) and specific domains like Movies and Sports using the CRAG benchmark.",
+        "task_type": [
+            "temporal QA",
+            "multi-hop reasoning",
+            "knowledge graph completion"
+        ],
+        "task_type_explanation": "The primary task is Question Answering over temporally evolving KGs, including an end-to-end setting where the KG is updated from raw documents.",
+        "dataset_characteristics": {
+            "dataset_names": [
+                "TimeQuestions",
+                "MultiTQ",
+                "CRAG (Movie and Sports domains)"
+            ],
+            "dataset_size": {
+                "entities": "Not specified in total, but CRAG Movie downsampled to 60% nodes",
+                "relations": "Not specified",
+                "triples": "Not specified",
+                "documents": "~3,400 corpora processed for updates"
+            },
+            "temporal_span": "Varies; Sports domain includes knowledge up to March 2024",
+            "update_frequency": "Simulated batch updates from document corpora"
+        },
+        "dataset_characteristics_explanation": "Uses standard temporal KGQA benchmarks and subsets of the CRAG benchmark to simulate evolving knowledge scenarios.",
+        "benchmark_metrics": [
+            "accuracy"
+        ],
+        "benchmark_metrics_explanation": "Primary metric is Exact Match accuracy for QA tasks."
+    },
+    "B_graph_kg_structure": {
+        "graph_kg_representation_type": [
+            "Attributed Knowledge Graph",
+            "Temporal KG"
+        ],
+        "graph_kg_representation_type_explanation": "The graph $\\mathcal{G}=(\\mathcal{V},\\mathcal{E},\\mathcal{A},\\mathcal{R},\\mathcal{P})$ includes property maps storing attributes and temporal validity intervals on edges.",
+        "graph_evolution_type": [
+            "Updatable (can revise/override)"
+        ],
+        "graph_evolution_type_explanation": "EvoKG updates the graph by inserting new nodes/edges or merging properties with confidence scores.",
+        "node_types": [
+            "entities"
+        ],
+        "node_types_explanation": "Standard KG entities (Person, Movie, Year, Place, etc.).",
+        "edge_types": [
+            "semantic KG relations",
+            "temporal relations"
+        ],
+        "edge_types_explanation": "Edges represent relations and are associated with temporal validity intervals [valid_from, valid_until].",
+        "graph_schema": {
+            "schema_type": "fixed ontology",
+            "schema_evolution_handling": "synonym matching"
+        },
+        "graph_schema_explanation": "Uses existing relation schemas but includes a 'Synonyms Matching' step during relation evolution to map extracted relations to the KG schema.",
+        "graph_scale": [
+            "Large (1M-100M nodes)"
+        ],
+        "graph_scale_explanation": "Based on the use of Wikidata subsets (TimeQuestions/MultiTQ) and CRAG, these are typically large-scale graphs."
+    },
+    "C_temporal_modeling_and_queries": {
+        "temporal_structure_type": [
+            "temporal KG"
+        ],
+        "temporal_structure_type_explanation": "Edges are explicitly annotated with validity intervals stored in property maps.",
+        "temporal_granularity": [
+            "timestamp",
+            "intervals/validity periods"
+        ],
+        "temporal_granularity_explanation": "Handles explicit start/end times and open-ended intervals.",
+        "temporal_representation": [
+            "Interval-based (start/end times)",
+            "Temporal constraints (before/after/during)"
+        ],
+        "temporal_representation_explanation": "Stored as [start, end] in edge properties; query analysis extracts temporal constraints.",
+        "temporal_query_handling": [
+            "explicit temporal parsing",
+            "temporal query decomposition"
+        ],
+        "temporal_query_handling_explanation": "The 'Multi-Route Decomposition' and 'Global Initialization' steps explicitly extract and embed temporal contexts from the query.",
+        "temporal_conflict_redundancy_handling": [
+            "explicit conflict detection"
+        ],
+        "temporal_conflict_redundancy_handling_explanation": "EvoKG detects contradictions for 'exclusive' relations (e.g., birth date) and manages them via confidence scores.",
+        "temporal_decay_obsolescence": {
+            "decay_function_type": [
+                "learned"
+            ],
+            "obsolescence_detection": "time elapsed since last observation",
+            "historical_preservation": "Non-exclusive facts are appended with intervals"
+        },
+        "temporal_decay_obsolescence_explanation": "Confidence scoring for exclusive facts includes a temporal decay term based on time elapsed since the value was last observed.",
+        "multi_hop_temporal_reasoning": {
+            "temporal_path_constraints": "Yes, temporal-aware reranking at each hop",
+            "temporal_ordering_enforcement": "Implicit via temporal validity checks during traversal",
+            "compositional_temporal_queries": "Yes, via multi-route decomposition"
+        },
+        "multi_hop_temporal_reasoning_explanation": "EVOREASONER performs beam search where neighbors are reranked based on temporal alignment with the query and subgoals."
+    },
+    "D_dynamic_update_mechanisms": {
+        "update_trigger": [
+            "batch"
+        ],
+        "update_trigger_explanation": "Updates are processed from a document corpus $\\mathcal{D}$.",
+        "update_policy_control_logic": [
+            "confidence-threshold",
+            "verification-based"
+        ],
+        "update_policy_control_logic_explanation": "Uses confidence scores based on frequency, recency, and source reliability to resolve contradictions.",
+        "update_scope": [
+            "fact-level"
+        ],
+        "update_scope_explanation": "Updates specific entity properties and relations.",
+        "verification_pipeline": {
+            "verification_stages": [
+                "semantic",
+                "source"
+            ],
+            "verification_methods": [
+                "confidence scoring"
+            ],
+            "confidence_scoring_approach": "Formula combining normalized frequency, temporal decay, and source credibility."
+        },
+        "verification_pipeline_explanation": "Calculates a confidence score $C(o)$ for candidate values.",
+        "conflict_resolution_strategy": {
+            "before_update": [],
+            "after_update": [
+                "correction"
+            ],
+            "versioning_approach": "Maintains multiple candidate values with confidence scores for exclusive relations.",
+            "temporal_scoping": "Non-exclusive relations are stored with validity intervals.",
+            "provenance_based_resolution": "Source credibility weight $w(o)$ is used."
+        },
+        "conflict_resolution_strategy_explanation": "Distinguishes between exclusive relations (resolved via confidence) and non-exclusive relations (resolved via temporal validity intervals).",
+        "incremental_construction": {
+            "entity_linking_method": "Embedding similarity + Contextual scoring",
+            "deduplication_strategy": "Contextual Alignment/Merging",
+            "fusion_approach": "Confidence-weighted merging for exclusive facts"
+        },
+        "incremental_construction_explanation": "New entities are aligned to existing nodes using embeddings; if similarity is low, new nodes are inserted.",
+        "update_latency_throughput": {
+            "target_latency": "N/A",
+            "update_throughput": "Processed ~3,400 corpora in <24 hours",
+            "scalability_characteristics": "Batch processing"
+        },
+        "update_latency_throughput_explanation": "Performance reported for offline batch updates."
+    },
+    "E_retrieval_and_reasoning": {
+        "retrieval_unit_granularity": [
+            "triple",
+            "dynamic graph pattern/subgraph"
+        ],
+        "retrieval_unit_granularity_explanation": "Retrieves entities for grounding, then expands to triplets during local exploration.",
+        "temporal_awareness_in_retrieval": [
+            "soft scoring",
+            "time-decay weighting"
+        ],
+        "temporal_awareness_in_retrieval_explanation": "Global initialization and local exploration steps both use temporal-aware scoring functions.",
+        "retrieval_strategy": [
+            "multi-hop path finding",
+            "graph traversal",
+            "hybrid vector-graph"
+        ],
+        "retrieval_strategy_explanation": "Starts with vector-based entity grounding, followed by beam search traversal on the graph.",
+        "retrieval_indexing": {
+            "index_structure": [
+                "temporal index"
+            ],
+            "index_update_strategy": "Incremental updates via EvoKG",
+            "query_optimization": [
+                "Query decomposition"
+            ]
+        },
+        "retrieval_indexing_explanation": "Uses property maps for temporal indexing; query decomposition guides the retrieval.",
+        "reasoning_generation_protocol": [
+            "path-based/graph-CoT",
+            "search-and-verify"
+        ],
+        "reasoning_generation_protocol_explanation": "Generates multiple reasoning routes, explores paths, validates them, and synthesizes an answer.",
+        "multi_hop_reasoning_support": {
+            "max_hop_depth": "Not strictly limited, determined by stopping criterion",
+            "path_ranking_mechanism": "Confidence score based on initialization, relation relevance, and triplet similarity",
+            "compositional_reasoning": "Yes, via subgoals in route decomposition"
+        },
+        "multi_hop_reasoning_support_explanation": "Aggregates high-confidence paths via weighted voting.",
+        "context_window_management": {
+            "large_graph_strategy": [
+                "filtering"
+            ],
+            "temporal_prioritization": "Yes, explicitly scores temporal relevance",
+            "dynamic_context_selection": "Yes, selects top-k paths"
+        },
+        "context_window_management_explanation": "Avoids dumping full context; selectively retrieves relevant paths to fit LLM constraints."
+    },
+    "F_llm_role_and_learning": {
+        "llm_role_in_system": [
+            "generator only",
+            "graph constructor",
+            "reasoner",
+            "verifier"
+        ],
+        "llm_role_in_system_explanation": "LLM decomposes queries, scores relevance, extracts facts for KG updates, and synthesizes final answers.",
+        "llm_adaptation_mode": [
+            "in-context learning"
+        ],
+        "llm_adaptation_mode_explanation": "Uses prompt templates (few-shot) for all tasks; no fine-tuning mentioned.",
+        "llm_integration_pattern": {
+            "as_extractor": "Extracts entities/relations from documents",
+            "as_reasoner": "Decomposes queries and synthesizes answers",
+            "as_verifier": "Scores relevance of entities and relations",
+            "as_learner": "N/A"
+        },
+        "llm_integration_pattern_explanation": "The system relies heavily on the LLM for semantic processing within the structural framework.",
+        "prompt_engineering": {
+            "prompting_strategy": [
+                "few-shot",
+                "chain-of-thought"
+            ],
+            "temporal_instruction_design": "Explicitly requests temporal context in JSON outputs",
+            "specialized_prompts": [
+                "Route Planning",
+                "Global Initialization",
+                "Relevance Scoring"
+            ]
+        },
+        "prompt_engineering_explanation": "Detailed prompts provided in Appendix for planning, grounding, and scoring.",
+        "continual_learning_support": {
+            "catastrophic_forgetting_mitigation": "N/A (External memory/KG approach)",
+            "knowledge_retention_strategy": "KG stores historical facts",
+            "incremental_learning_approach": "KG evolution updates the external knowledge base"
+        },
+        "continual_learning_support_explanation": "The LLM remains frozen; the KG handles the 'learning' (updating) of new information."
+    },
+    "G_evaluation_and_practical": {
+        "evaluation_focus": [
+            "temporal QA accuracy",
+            "dynamic update quality/stability"
+        ],
+        "evaluation_focus_explanation": "Evaluates reasoning accuracy on static temporal KGs and improvement in QA after KG updates.",
+        "evaluation_metrics": {
+            "accuracy_metrics": [
+                "Exact Match / Accuracy"
+            ],
+            "temporal_metrics": [],
+            "update_quality_metrics": [
+                "Downstream QA improvement"
+            ],
+            "efficiency_metrics": [],
+            "consistency_metrics": []
+        },
+        "evaluation_metrics_explanation": "Main metric is QA accuracy. KG quality is inferred from downstream task performance.",
+        "baseline_comparisons": {
+            "systems_compared": [
+                "IO Prompt",
+                "CoT",
+                "Self-Consistency",
+                "RAG",
+                "1-hop KG",
+                "Think-on-Graph",
+                "Plan-on-Graph"
+            ],
+            "performance_gains": [
+                "Up to 23.3% gain on TimeQuestions",
+                "Matches 671B model performance with 8B model using EvoReason"
+            ]
+        },
+        "baseline_comparisons_explanation": "Consistent improvement over LLM-only and existing KG-augmented methods.",
+        "graph_summarization_compression": [
+            "none"
+        ],
+        "graph_summarization_compression_explanation": "Focuses on filtering and scoring rather than summarization.",
+        "explainability": [
+            "reasoning trace visualization",
+            "path-based/graph-based explanations"
+        ],
+        "explainability_explanation": "Can visualize reasoning paths as annotated subgraphs.",
+        "scalability_analysis": {
+            "experiments_conducted": "Tested across model sizes (8B to 671B)",
+            "bottleneck_identification": [
+                "Dense retrieval in 1-hop KG approaches"
+            ],
+            "optimization_strategies": [
+                "Pruning via relevance scoring"
+            ]
+        },
+        "scalability_analysis_explanation": "Highlights that dense retrieval hurts performance in temporal domains; pruning is essential.",
+        "real_world_deployment": {
+            "production_deployment": "No",
+            "integration_considerations": [
+                "Requires access to clean temporal cues"
+            ],
+            "operational_challenges": [
+                "Scalability on very large corpora"
+            ]
+        },
+        "real_world_deployment_explanation": "Academic prototype."
+    },
+    "H_novel_technical_contributions": {
+        "algorithmic_innovations": {
+            "novel_algorithms": [
+                "EVOREASONER (Multi-route decomposition + Temporal Local/Global search)",
+                "EvoKG (Noise-tolerant evolution)"
+            ],
+            "complexity_analysis": "Cost function defined for route planning",
+            "theoretical_guarantees": []
+        },
+        "algorithmic_innovations_explanation": "Combines planning-based reasoning with a specific focus on temporal constraints and KG evolution.",
+        "architecture_patterns": {
+            "system_architecture": "dual-layer (Reasoning Module + Evolution Module)",
+            "component_interactions": [
+                "Reasoning uses KG",
+                "Evolution updates KG from Corpus"
+            ],
+            "design_principles": [
+                "Tight coupling of reasoning and evolution",
+                "Confidence-aware updates"
+            ]
+        },
+        "architecture_patterns_explanation": "Framework separates the reasoning logic from the knowledge maintenance logic but ensures they are compatible (temporal awareness).",
+        "memory_storage": {
+            "memory_architecture": [
+                "semantic"
+            ],
+            "storage_mechanisms": [
+                "persistent"
+            ],
+            "persistence_strategy": "Graph database with property maps"
+        },
+        "memory_storage_explanation": "KG serves as the external semantic memory.",
+        "attention_mechanisms": {
+            "temporal_attention": "Implicit via scoring functions",
+            "entity_aware_attention": "N/A",
+            "graph_attention_variants": []
+        },
+        "attention_mechanisms_explanation": "Uses LLM attention over retrieved paths and scoring functions to approximate attention.",
+        "neural_architecture": {
+            "gnn_variants": [],
+            "embedding_techniques": [
+                "Sentence-BERT (IBM Slate)"
+            ],
+            "fusion_mechanisms": []
+        },
+        "neural_architecture_explanation": "Uses dense embeddings for initial entity retrieval."
+    },
+    "I_reproducibility_implementation": {
+        "code_availability": "available",
+        "code_availability_explanation": "github.com/junhongmit/TREK",
+        "implementation_details": {
+            "programming_languages": [],
+            "frameworks": [],
+            "hardware_requirements": "Single consumer GPU (implied for 8B model inference) / Cloud server for KG construction",
+            "training_inference_costs": "KG update takes ~24 hours for ~3400 corpora"
+        },
+        "implementation_details_explanation": "Uses public APIs (OpenAI, DeepSeek) and local/cloud compute for graph operations.",
+        "hyperparameters": {
+            "key_hyperparameters": [
+                "Top-K for retrieval",
+                "Confidence thresholds",
+                "Weighting params gamma/delta"
+            ],
+            "sensitivity_analysis": "Number of routes analysis (Figure 3)"
+        },
+        "hyperparameters_explanation": "Ablation studies conducted on route decomposition and global search."
+    },
+    "J_limitations_future_work": {
+        "acknowledged_limitations": {
+            "scalability_limits": [
+                "Challenges on very large corpora"
+            ],
+            "temporal_reasoning_gaps": [],
+            "generalization_issues": [
+                "Assumes access to clean temporal cues"
+            ]
+        },
+        "acknowledged_limitations_explanation": "The system relies on the presence of extractable temporal signals.",
+        "future_research_directions": {
+            "open_problems": [],
+            "suggested_improvements": [
+                "Scaling to larger corpora"
+            ],
+            "extension_opportunities": []
+        },
+        "future_research_directions_explanation": "Focus on scalability."
+    },
+    "K_cross_cutting_concerns": {
+        "provenance_trust": {
+            "source_tracking": "Yes, source credibility weight w(o)",
+            "trust_confidence_modeling": "Explicit confidence scores stored in properties",
+            "attribution_maintenance": "Context (ctx) stored with values"
+        },
+        "provenance_trust_explanation": "EvoKG explicitly models confidence and context for every extracted fact.",
+        "privacy_security": {
+            "privacy_considerations": [
+                "Misuse for surveillance/profiling"
+            ],
+            "access_control": "",
+            "data_sensitivity": ""
+        },
+        "privacy_security_explanation": "Broader impacts section discusses risks of profiling.",
+        "multi_modal_support": {
+            "modalities": [
+                "Text-only"
+            ],
+            "cross_modal_reasoning": ""
+        },
+        "multi_modal_support_explanation": "Focuses on text-based KGs.",
+        "domain_adaptation": {
+            "transfer_learning": "",
+            "domain_customization": "Domain-specific KGs (Movie, Sports)",
+            "zero_shot_application": "Few-shot prompting used, implying zero/few-shot adaptability"
+        },
+        "domain_adaptation_explanation": "Method is general but tested on specific domains.",
+        "human_in_the_loop": {
+            "interactive_components": [],
+            "expert_feedback": "",
+            "user_study": ""
+        },
+        "human_in_the_loop_explanation": "Fully automated."
+    },
+    "notable_contributions": {
+        "key_innovations": [
+            "Unified framework for temporal reasoning and KG evolution",
+            "Confidence-based contradiction resolution for exclusive facts",
+            "Multi-route decomposition with temporal awareness"
+        ],
+        "unique_approaches": [
+            "Modeling 'exclusive' vs 'non-exclusive' relations differently during updates",
+            "Using route planning as 'soft reasoning guidance' for graph traversal"
+        ],
+        "main_findings": [
+            "Small LLMs (8B) with updated KGs can match large LLMs (671B) prompted with outdated knowledge",
+            "Dense retrieval (1-hop KG) degrades performance in temporal domains due to noise"
+        ]
+    },
+    "notable_contributions_explanation": "The paper demonstrates that 'smart' retrieval (temporal-aware traversal) combined with 'smart' updates (confidence-based evolution) allows smaller models to outperform significantly larger static models.",
+    "extraction_metadata": {
+        "confidence_level": "High",
+        "ambiguous_classifications": [],
+        "related_papers_mentioned": [
+            "Think-on-Graph [23]",
+            "Plan-on-Graph [3]"
+        ],
+        "extraction_notes": "The paper distinguishes between static contradiction resolution (exclusive facts) and temporal evolution (non-exclusive facts), which is a key structural feature."
+    }
+}

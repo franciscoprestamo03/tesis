@@ -1,0 +1,406 @@
+{
+    "meta": {
+        "title": "Temporal Knowledge Graph Reasoning with Dynamic Hypergraph Embedding",
+        "date": "May 2024",
+        "link": "2024.lrec-main.1367.pdf",
+        "paper_type": "Novel model/system",
+        "paper_type_explanation": "The paper introduces DHE-TKG, a new model for temporal knowledge graph reasoning using dynamic hypergraph embedding to capture high-order interactions."
+    },
+    "A_data_and_task": {
+        "domain_data_type": [
+            "social-political events",
+            "knowledge bases"
+        ],
+        "domain_data_type_explanation": "Focuses on socio-political events from ICEWS datasets and knowledge bases like WIKI and YAGO.",
+        "task_type": [
+            "knowledge graph reasoning",
+            "link prediction",
+            "entity prediction",
+            "relation prediction"
+        ],
+        "task_type_explanation": "Predicts missing entities or relations in future timestamps on TKGs, e.g., (s, r, ?, t) or (s, ?, o, t).",
+        "dataset_characteristics": {
+            "dataset_names": [
+                "ICEWS14",
+                "ICEWS05-15",
+                "ICEWS18",
+                "WIKI",
+                "YAGO"
+            ],
+            "dataset_size": {
+                "entities": "7128-23033",
+                "relations": "10-256",
+                "triples": "",
+                "documents": ""
+            },
+            "temporal_span": "2005-2018 (ICEWS), years (WIKI/YAGO)",
+            "update_frequency": "daily (ICEWS), yearly (WIKI)"
+        },
+        "dataset_characteristics_explanation": "Datasets split 80/10/10 train/valid/test; ICEWS has daily granularity over 365-4017 snapshots; stats provided in Table 1.",
+        "benchmark_metrics": [
+            "MRR",
+            "MR",
+            "HITS@1",
+            "HITS@3"
+        ],
+        "benchmark_metrics_explanation": "Evaluated under original setup without filtering to avoid temporal optimism; focuses on entity/relation prediction."
+    },
+    "B_graph_kg_structure": {
+        "graph_kg_representation_type": [
+            "Temporal KG"
+        ],
+        "graph_kg_representation_type_explanation": "TKG as series of static KG snapshots Gt = {s, r, o, t} at timestamps.",
+        "graph_evolution_type": [
+            "Append-only"
+        ],
+        "graph_evolution_type_explanation": "Historical snapshots G0:tq-1 used for future prediction; evolves by adding new timestamp facts.",
+        "node_types": [
+            "entities"
+        ],
+        "node_types_explanation": "Subject/object entities S/O; no explicit events/documents.",
+        "edge_types": [
+            "semantic KG relations"
+        ],
+        "edge_types_explanation": "Relations r in quadruples (s, r, o, t); inverse relations added.",
+        "graph_schema": {
+            "schema_type": "fixed ontology",
+            "schema_evolution_handling": "N/A"
+        },
+        "graph_schema_explanation": "Relations fixed per dataset; no schema evolution discussed.",
+        "graph_scale": "Medium (10K-1M nodes)",
+        "graph_scale_explanation": "Entities 7K-23K across datasets; snapshots imply medium scale per Gt."
+    },
+    "C_temporal_modeling_and_queries": {
+        "temporal_structure_type": [
+            "temporal KG"
+        ],
+        "temporal_structure_type_explanation": "Series of timestamped snapshots with evolutionary embeddings.",
+        "temporal_granularity": [
+            "timestamp"
+        ],
+        "temporal_granularity_explanation": "Daily (ICEWS) or yearly (WIKI/YAGO) timestamps.",
+        "temporal_representation": [
+            "Point-based (discrete timestamps)"
+        ],
+        "temporal_representation_explanation": "Facts at discrete t; location nodes encode timestamp positions.",
+        "temporal_query_handling": [
+            "N/A"
+        ],
+        "temporal_query_handling_explanation": "No explicit query parsing; focuses on prediction given (s,r,?,t).",
+        "temporal_conflict_redundancy_handling": [
+            "N/A"
+        ],
+        "temporal_conflict_redundancy_handling_explanation": "Not addressed; assumes append-only history.",
+        "temporal_decay_obsolescence": {
+            "decay_function_type": [],
+            "obsolescence_detection": "N/A",
+            "historical_preservation": "GRU updates preserve history"
+        },
+        "temporal_decay_obsolescence_explanation": "GRU maintains historical info; dynamic attention weights timestamps.",
+        "multi_hop_temporal_reasoning": {
+            "temporal_path_constraints": "N/A",
+            "temporal_ordering_enforcement": "Input history order via location nodes",
+            "compositional_temporal_queries": "N/A"
+        },
+        "multi_hop_temporal_reasoning_explanation": "RGCN captures multi-hop in snapshots; hypergraphs enable high-order links."
+    },
+    "D_dynamic_update_mechanisms": {
+        "update_trigger": [
+            "N/A"
+        ],
+        "update_trigger_explanation": "Offline training on fixed snapshots; no runtime updates.",
+        "update_policy_control_logic": [
+            "N/A"
+        ],
+        "update_policy_control_logic_explanation": "N/A",
+        "update_scope": [
+            "N/A"
+        ],
+        "update_scope_explanation": "N/A",
+        "verification_pipeline": {
+            "verification_stages": [],
+            "verification_methods": [],
+            "confidence_scoring_approach": "N/A"
+        },
+        "verification_pipeline_explanation": "No explicit verification; BCE loss for training.",
+        "conflict_resolution_strategy": {
+            "before_update": [],
+            "after_update": [],
+            "versioning_approach": "N/A",
+            "temporal_scoping": "N/A",
+            "provenance_based_resolution": "N/A"
+        },
+        "conflict_resolution_strategy_explanation": "N/A",
+        "incremental_construction": {
+            "entity_linking_method": "N/A",
+            "deduplication_strategy": "N/A",
+            "fusion_approach": "N/A"
+        },
+        "incremental_construction_explanation": "N/A",
+        "update_latency_throughput": {
+            "target_latency": "N/A",
+            "update_throughput": "N/A",
+            "scalability_characteristics": "N/A"
+        },
+        "update_latency_throughput_explanation": "No dynamic updates; inference-focused."
+    },
+    "E_retrieval_and_reasoning": {
+        "retrieval_unit_granularity": [
+            "N/A"
+        ],
+        "retrieval_unit_granularity_explanation": "No retrieval; embedding-based prediction.",
+        "temporal_awareness_in_retrieval": [
+            "N/A"
+        ],
+        "temporal_awareness_in_retrieval_explanation": "N/A",
+        "retrieval_strategy": [
+            "graph traversal"
+        ],
+        "retrieval_strategy_explanation": "RGCN/hypergraph convolution aggregates neighbors/hyperedges.",
+        "retrieval_indexing": {
+            "index_structure": [],
+            "index_update_strategy": "N/A",
+            "query_optimization": []
+        },
+        "retrieval_indexing_explanation": "N/A",
+        "reasoning_generation_protocol": [
+            "path-based/graph-CoT"
+        ],
+        "reasoning_generation_protocol_explanation": "Encoder fuses evolutionary (RGCN+GRU) and hypergraph embeddings; ConvTransE decoder scores.",
+        "multi_hop_reasoning_support": {
+            "max_hop_depth": "N/A",
+            "path_ranking_mechanism": "N/A",
+            "compositional_reasoning": "Hypergraph high-order"
+        },
+        "multi_hop_reasoning_support_explanation": "Multi-layer RGCN; hypergraphs capture beyond pairwise.",
+        "context_window_management": {
+            "large_graph_strategy": [
+                "truncation"
+            ],
+            "temporal_prioritization": "Dynamic attention on history graphs",
+            "dynamic_context_selection": "Attention weights timestamps"
+        },
+        "context_window_management_explanation": "Input limited to T history snapshots; dynamic meta-embedding fuses."
+    },
+    "F_llm_role_and_learning": {
+        "llm_role_in_system": [],
+        "llm_role_in_system_explanation": "No LLMs; GNN/RNN-based.",
+        "llm_adaptation_mode": [],
+        "llm_adaptation_mode_explanation": "N/A",
+        "llm_integration_pattern": {
+            "as_extractor": "N/A",
+            "as_reasoner": "N/A",
+            "as_verifier": "N/A",
+            "as_learner": "N/A"
+        },
+        "llm_integration_pattern_explanation": "N/A",
+        "prompt_engineering": {
+            "prompting_strategy": [],
+            "temporal_instruction_design": "N/A",
+            "specialized_prompts": []
+        },
+        "prompt_engineering_explanation": "N/A",
+        "continual_learning_support": {
+            "catastrophic_forgetting_mitigation": "N/A",
+            "knowledge_retention_strategy": "N/A",
+            "incremental_learning_approach": "N/A"
+        },
+        "continual_learning_support_explanation": "N/A"
+    },
+    "G_evaluation_and_practical": {
+        "evaluation_focus": [
+            "temporal QA accuracy",
+            "domain-specific performance"
+        ],
+        "evaluation_focus_explanation": "TKG reasoning on entity/relation prediction.",
+        "evaluation_metrics": {
+            "accuracy_metrics": [
+                "MRR",
+                "HITS@1",
+                "HITS@3"
+            ],
+            "temporal_metrics": [],
+            "update_quality_metrics": [],
+            "efficiency_metrics": [],
+            "consistency_metrics": []
+        },
+        "evaluation_metrics_explanation": "MRR up to 62.93 (YAGO); outperforms baselines like RE-GCN.",
+        "baseline_comparisons": {
+            "systems_compared": [
+                "RE-GCN",
+                "CyGNet",
+                "RGCRN",
+                "HyTE",
+                "DistMult",
+                "ConvE"
+            ],
+            "performance_gains": [
+                "+0.28 MRR ICEWS18",
+                "+0.76 MRR ICEWS14"
+            ]
+        },
+        "baseline_comparisons_explanation": "Outperforms static/TKG baselines; Tables 2-7 show gains.",
+        "graph_summarization_compression": [],
+        "graph_summarization_compression_explanation": "N/A",
+        "explainability": [
+            "path-based/graph-based explanations"
+        ],
+        "explainability_explanation": "Case studies visualize hyperedges linking distant entities.",
+        "scalability_analysis": {
+            "experiments_conducted": "N/A",
+            "bottleneck_identification": [],
+            "optimization_strategies": []
+        },
+        "scalability_analysis_explanation": "No explicit scalability experiments.",
+        "real_world_deployment": {
+            "production_deployment": "N/A",
+            "integration_considerations": [],
+            "operational_challenges": []
+        },
+        "real_world_deployment_explanation": "N/A"
+    },
+    "H_novel_technical_contributions": {
+        "algorithmic_innovations": {
+            "novel_algorithms": [
+                "Dynamic Hypergraph Embedding",
+                "Location Node Aggregation",
+                "Temporal Feature Variation"
+            ],
+            "complexity_analysis": "N/A",
+            "theoretical_guarantees": []
+        },
+        "algorithmic_innovations_explanation": "Hypergraph per snapshot via k-NN; dynamic meta-embedding fuses timestamps.",
+        "architecture_patterns": {
+            "system_architecture": "dual-layer",
+            "component_interactions": [
+                "Evolutionary Embedding",
+                "Dynamic Hypergraph",
+                "Fusion"
+            ],
+            "design_principles": [
+                "Low+high-order balance"
+            ]
+        },
+        "architecture_patterns_explanation": "Encoder: RGCN+GRU (evolutionary) + hypergraph conv; α-fusion.",
+        "memory_storage": {
+            "memory_architecture": [],
+            "storage_mechanisms": [],
+            "persistence_strategy": "N/A"
+        },
+        "memory_storage_explanation": "N/A",
+        "attention_mechanisms": {
+            "temporal_attention": "Dynamic attention on timestamps",
+            "entity_aware_attention": "Hyperedge attention",
+            "graph_attention_variants": []
+        },
+        "attention_mechanisms_explanation": "Self-attention weights history graphs; MLP for hyperedge scores.",
+        "neural_architecture": {
+            "gnn_variants": [
+                "RGCN",
+                "Hypergraph Convolution"
+            ],
+            "embedding_techniques": [
+                "Evolutionary GRU",
+                "Meta-embedding"
+            ],
+            "fusion_mechanisms": [
+                "Attention fusion"
+            ]
+        },
+        "neural_architecture_explanation": "ConvTransE decoder; k=8 hyperedges."
+    },
+    "I_reproducibility_implementation": {
+        "code_availability": "not available",
+        "code_availability_explanation": "No code or repo mentioned.",
+        "implementation_details": {
+            "programming_languages": [],
+            "frameworks": [],
+            "hardware_requirements": "N/A",
+            "training_inference_costs": "N/A"
+        },
+        "implementation_details_explanation": "d=200, RGCN layers=2, dropout=0.2, lr=0.01 Adam.",
+        "hyperparameters": {
+            "key_hyperparameters": [
+                "α=0.1-0.4",
+                "k-NN=8"
+            ],
+            "sensitivity_analysis": "α variation; gating functions"
+        },
+        "hyperparameters_explanation": "α tuned per dataset; sigmoid best gating."
+    },
+    "J_limitations_future_work": {
+        "acknowledged_limitations": {
+            "scalability_limits": [],
+            "temporal_reasoning_gaps": [],
+            "generalization_issues": []
+        },
+        "acknowledged_limitations_explanation": "No explicit limitations section.",
+        "future_research_directions": {
+            "open_problems": [],
+            "suggested_improvements": [],
+            "extension_opportunities": []
+        },
+        "future_research_directions_explanation": "N/A; concludes with model advantages."
+    },
+    "K_cross_cutting_concerns": {
+        "provenance_trust": {
+            "source_tracking": "N/A",
+            "trust_confidence_modeling": "N/A",
+            "attribution_maintenance": "N/A"
+        },
+        "provenance_trust_explanation": "N/A",
+        "privacy_security": {
+            "privacy_considerations": [],
+            "access_control": "N/A",
+            "data_sensitivity": "N/A"
+        },
+        "privacy_security_explanation": "N/A",
+        "multi_modal_support": {
+            "modalities": [
+                "Text-only"
+            ],
+            "cross_modal_reasoning": "N/A"
+        },
+        "multi_modal_support_explanation": "KG triples only.",
+        "domain_adaptation": {
+            "transfer_learning": "N/A",
+            "domain_customization": "α per dataset",
+            "zero_shot_application": "N/A"
+        },
+        "domain_adaptation_explanation": "Tested on multiple TKG domains.",
+        "human_in_the_loop": {
+            "interactive_components": [],
+            "expert_feedback": "N/A",
+            "user_study": "N/A"
+        },
+        "human_in_the_loop_explanation": "N/A"
+    },
+    "notable_contributions": {
+        "key_innovations": [
+            "Dynamic hypergraph for TKG",
+            "Location-aware aggregation",
+            "Evolutionary + hypergraph fusion"
+        ],
+        "unique_approaches": [
+            "k-NN hyperedges per snapshot",
+            "Timestamp dynamic attention"
+        ],
+        "main_findings": [
+            "Outperforms RE-GCN by capturing high-order interactions"
+        ]
+    },
+    "notable_contributions_explanation": "Addresses high-order relations missing in prior GNN-TKGs; case studies show hyperedges linking distant entities.",
+    "extraction_metadata": {
+        "confidence_level": "High",
+        "ambiguous_classifications": [
+            "Graph scale (inferred)"
+        ],
+        "related_papers_mentioned": [
+            "RE-GCN",
+            "CyGNet",
+            "HyTE",
+            "TTransE"
+        ],
+        "extraction_notes": "Paper not GraphRAG-focused but TKG reasoning; many dynamic features N/A as static training model."
+    }
+}
